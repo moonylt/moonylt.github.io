@@ -10,8 +10,10 @@ const { navItems, currentPath } = Astro.props;
 <div class="md:hidden relative">
   <button
     id="menu-toggle"
-    class="text-text-muted hover:text-text-primary p-2"
     aria-label="Toggle menu"
+    aria-expanded="false"
+    aria-controls="mobile-menu"
+    class="text-text-muted hover:text-text-primary p-2"
   >
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -35,13 +37,25 @@ const { navItems, currentPath } = Astro.props;
   const menu = document.getElementById('mobile-menu');
 
   toggle?.addEventListener('click', () => {
+    const isHidden = menu?.classList.contains('hidden');
     menu?.classList.toggle('hidden');
+    toggle?.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
   });
 
   // Close menu when clicking outside
   document.addEventListener('click', (e) => {
-    if (!toggle?.contains(e.target as Node) && !menu?.contains(e.target as Node)) {
+    const target = e.target;
+    if (target instanceof Node && !toggle?.contains(target) && !menu?.contains(target)) {
       menu?.classList.add('hidden');
+    }
+  });
+
+  // Close menu when pressing Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu?.classList.contains('hidden')) {
+      menu?.classList.add('hidden');
+      toggle?.setAttribute('aria-expanded', 'false');
+      toggle?.focus();
     }
   });
 </script>
