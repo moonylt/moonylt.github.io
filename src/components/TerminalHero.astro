@@ -3,54 +3,56 @@ import TypingAnimation from './TypingAnimation.astro';
 import Particle from './Particle.astro';
 ---
 
-<section class="relative min-h-[60vh] flex flex-col items-start py-16">
-  <!-- Floating Particles -->
-  <Particle color="accent" size="md" position={{ top: '15%', right: '8%' }} delay={0} />
-  <Particle color="success" size="sm" position={{ top: '25%', right: '15%' }} delay={0.5} />
-  <Particle color="highlight" size="sm" position={{ top: '10%', right: '20%' }} delay={1} />
+<section class="relative min-h-[50vh] md:min-h-[60vh] flex flex-col items-start py-8 md:py-16">
+  <!-- Floating Particles - hidden on small screens -->
+  <div class="hidden sm:block absolute inset-0">
+    <Particle color="accent" size="md" position={{ top: '15%', right: '8%' }} delay={0} />
+    <Particle color="success" size="sm" position={{ top: '25%', right: '15%' }} delay={0.5} />
+    <Particle color="highlight" size="sm" position={{ top: '10%', right: '20%' }} delay={1} />
+  </div>
 
   <!-- Terminal Content -->
   <div class="font-mono w-full max-w-2xl">
     <!-- Directory indicator -->
-    <div class="text-text-muted text-sm mb-4">
+    <div class="text-text-muted text-xs md:text-sm mb-3 md:mb-4">
       ~/portfolio <span class="text-success">(main)</span>
     </div>
 
     <!-- Command: whoami -->
-    <div class="terminal-command text-lg mb-2">
+    <div class="terminal-command text-base md:text-lg mb-2">
       $ <TypingAnimation text="whoami" delay={300} speed={80} />
     </div>
 
     <!-- Output -->
-    <div class="terminal-output mt-4 space-y-2">
-      <div class="text-highlight text-2xl font-bold">
+    <div class="terminal-output mt-3 md:mt-4 space-y-1 md:space-y-2">
+      <div class="text-highlight text-xl md:text-2xl font-bold">
         <TypingAnimation text="Your Name" delay={800} speed={60} />
       </div>
-      <div class="text-text-primary">
+      <div class="text-text-primary text-sm md:text-base">
         <TypingAnimation text="Full-stack Developer | Open Source Enthusiast" delay={1400} speed={40} />
       </div>
-      <div class="text-text-muted text-sm mt-3">
+      <div class="text-text-muted text-xs md:text-sm mt-2 md:mt-3">
         <TypingAnimation text="Building elegant solutions with modern tech." delay={2500} speed={30} />
       </div>
     </div>
 
     <!-- Command: ls projects -->
-    <div class="terminal-command text-lg mt-8">
+    <div class="terminal-command text-base md:text-lg mt-6 md:mt-8">
       $ <TypingAnimation text="ls projects/" delay={3500} speed={80} />
     </div>
 
-    <div class="flex gap-3 mt-3 text-accent">
+    <div class="flex flex-wrap gap-2 md:gap-3 mt-2 md:mt-3 text-accent text-sm md:text-base">
       <TypingAnimation text="project-alpha/  " delay={4200} speed={50} />
       <TypingAnimation text="web-app/  " delay={4500} speed={50} />
       <TypingAnimation text="blog/" delay={4800} speed={50} />
     </div>
 
     <!-- Blinking cursor -->
-    <div class="terminal-cursor mt-6 text-accent">█</div>
+    <div class="terminal-cursor mt-4 md:mt-6 text-accent">█</div>
   </div>
 
   <!-- Skill tags -->
-  <div class="flex gap-2 mt-12">
+  <div class="flex flex-wrap gap-2 mt-8 md:mt-12">
     <span class="tag tag-react">React</span>
     <span class="tag tag-typescript">TypeScript</span>
     <span class="tag tag-node">Node.js</span>
@@ -58,11 +60,11 @@ import Particle from './Particle.astro';
   </div>
 
   <!-- CTA -->
-  <div class="mt-8 flex gap-4">
-    <a href="/projects" class="bg-accent/20 border border-accent/40 text-accent px-4 py-2 rounded hover:bg-accent/30 transition-colors">
+  <div class="mt-6 md:mt-8 flex flex-col sm:flex-row gap-3 md:gap-4">
+    <a href="/projects" class="bg-accent/20 border border-accent/40 text-accent px-4 py-2 rounded hover:bg-accent/30 transition-colors text-center">
       View Projects →
     </a>
-    <a href="/about" class="text-text-muted hover:text-text-primary transition-colors">
+    <a href="/about" class="text-text-muted hover:text-text-primary transition-colors text-center">
       About Me →
     </a>
   </div>

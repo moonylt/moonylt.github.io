@@ -99,6 +99,18 @@
   animation: blink 1s infinite;
 }
 
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  .project-card {
+    padding: 0.75rem;
+  }
+
+  .tag {
+    font-size: 0.65rem;
+    padding: 0.125rem 0.5rem;
+  }
+}
+
 /* Typing animation (reserved for future use in Task 3) */
 @keyframes typing {
   from { width: 0; }
