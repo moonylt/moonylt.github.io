@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="About - Your Name" description="About me and my background">
+  <section>
+    <div class="text-text-muted text-sm mb-2">~/about</div>
+    <h1 class="text-accent text-3xl font-bold mb-8">About</h1>
+
+    <div class="max-w-2xl space-y-6">
+      <!-- Introduction -->
+      <div class="project-card">
+        <h2 class="text-highlight text-lg font-bold mb-3">Who am I?</h2>
+        <p class="text-text-primary">
+          I'm a full-stack developer passionate about building elegant solutions
+          to complex problems. My focus is on creating performant, maintainable
+          software that makes a real impact.
+        </p>
+      </div>
+
+      <!-- Skills -->
+      <div class="project-card">
+        <h2 class="text-success text-lg font-bold mb-3">Skills & Technologies</h2>
+        <div class="flex flex-wrap gap-2">
+          <span class="tag tag-react">React</span>
+          <span class="tag tag-typescript">TypeScript</span>
+          <span class="tag tag-node">Node.js</span>
+          <span class="tag tag-python">Python</span>
+          <span class="tag tag-go">Go</span>
+          <span class="tag tag-rust">Rust</span>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div class="project-card">
+        <h2 class="text-accent text-lg font-bold mb-3">Get in Touch</h2>
+        <div class="flex flex-col gap-3">
+          <a href="mailto:your@email.com" class="text-text-muted hover:text-accent transition-colors">
+            your@email.com
+          </a>
+          <a href="https://github.com/yourname" target="_blank" rel="noopener" class="text-text-muted hover:text-accent transition-colors">
+            GitHub: @yourname
+          </a>
+          <a href="https://linkedin.com/in/yourname" target="_blank" rel="noopener" class="text-text-muted hover:text-accent transition-colors">
+            LinkedIn: /in/yourname
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
