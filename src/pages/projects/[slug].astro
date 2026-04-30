@@ -1,0 +1,29 @@
+---
+import Base from '../../layouts/Base.astro';
+import FeaturedProject from '../../components/FeaturedProject.astro';
+import { projects } from '../../data/projects';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+---
+
+<Base title={`${project.title} - moonylt`} description={project.description}>
+  <section>
+    <div class="text-text-muted text-sm mb-2">~/projects/{project.slug}</div>
+    <h1 class="text-accent text-3xl font-bold mb-8">{project.title}</h1>
+
+    <!-- Featured-style card with full features -->
+    <FeaturedProject project={project} showFeatures={true} />
+
+    <!-- Back link -->
+    <a href="/projects" class="text-text-muted hover:text-accent transition-colors mt-8 inline-block">
+      ← Back to Projects
+    </a>
+  </section>
+</Base>

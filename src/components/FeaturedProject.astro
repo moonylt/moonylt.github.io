@@ -4,29 +4,55 @@ import { techColorMap } from '../data/techColors';
 
 interface Props {
   project: Project;
+  showFeatures?: boolean;
 }
 
-const { project } = Astro.props;
+const { project, showFeatures = false } = Astro.props;
 ---
 
 <div class="project-card glow-accent hover:glow-accent transition-all duration-300 hover:scale-[1.02]">
   <!-- Header -->
   <div class="flex justify-between items-start mb-4">
     <h2 class="text-accent text-xl font-bold">★ {project.title}</h2>
-    {project.stars && (
-      <span class="text-text-muted text-sm flex items-center gap-1">
-        ⭐ {project.stars}
-      </span>
-    )}
+    <div class="flex items-center gap-2">
+      {project.stars && (
+        <span class="text-text-muted text-sm flex items-center gap-1">
+          ⭐ {project.stars}
+        </span>
+      )}
+      <a href={`/projects/${project.slug}`} class="text-text-muted hover:text-success text-sm transition-colors">
+        Details →
+      </a>
+    </div>
   </div>
+
+  <!-- Detailed Description -->
+  {project.detailedDescription && (
+    <p class="text-success text-sm mb-2 italic">{project.detailedDescription}</p>
+  )}
 
   <!-- Description -->
   <p class="text-text-primary mb-4">{project.description}</p>
 
+  <!-- Features List -->
+  {showFeatures && project.features && (
+    <div class="mb-4">
+      <h3 class="text-text-muted text-sm mb-2">Features:</h3>
+      <ul class="text-text-primary text-sm space-y-1">
+        {project.features.map((feature) => (
+          <li class="flex items-start gap-2">
+            <span class="text-success">•</span>
+            <span>{feature}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+
   <!-- Tech Tags -->
   <div class="flex gap-2 mb-4">
     {project.tech.map((t) => (
-      <span class={`tag ${techColorMap[t] || 'tag-react'}`}>{t}</span>
+      <span class={`tag ${techColorMap[t] || ''}`}>{t}</span>
     ))}
   </div>
 
