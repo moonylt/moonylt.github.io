@@ -47,6 +47,7 @@ const { navItems, currentPath } = Astro.props;
     const target = e.target;
     if (target instanceof Node && !toggle?.contains(target) && !menu?.contains(target)) {
       menu?.classList.add('hidden');
+      toggle?.setAttribute('aria-expanded', 'false');
     }
   });
 
