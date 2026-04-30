@@ -40,7 +40,7 @@
   }
 
   .terminal-cursor {
-    @apply text-accent animate-pulse;
+    @apply text-accent animate-blink;
   }
 
   .project-card {

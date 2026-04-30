@@ -6,34 +6,29 @@ interface Props {
 }
 
 const { text, delay = 0, speed = 50 } = Astro.props;
+const id = `typing-${Math.random().toString(36).slice(2, 9)}`;
 ---
 
-<span class="typing-container" data-text={text} data-delay={delay} data-speed={speed}>
+<span id={id} class="typing-container" data-text={text} data-delay={delay} data-speed={speed}>
   <span class="typing-text"></span>
 </span>
 
-<script define:vars={{ text, delay, speed }}>
+<script define:vars={{ id, text, delay, speed }}>
   document.addEventListener('DOMContentLoaded', () => {
-    const containers = document.querySelectorAll('.typing-container');
+    const container = document.getElementById(id);
+    if (!container) return;
+    const textEl = container.querySelector('.typing-text');
 
-    containers.forEach((container, index) => {
-      const text = container.dataset.text;
-      const delay = parseInt(container.dataset.delay || '0');
-      const speed = parseInt(container.dataset.speed || '50');
-      const textEl = container.querySelector('.typing-text');
-
-      let charIndex = 0;
-
-      setTimeout(() => {
-        const typeChar = () => {
-          if (charIndex < text.length) {
-            textEl.textContent += text[charIndex];
-            charIndex++;
-            setTimeout(typeChar, speed);
-          }
-        };
-        typeChar();
-      }, delay + (index * 100));
-    });
+    let charIndex = 0;
+    setTimeout(() => {
+      const typeChar = () => {
+        if (charIndex < text.length) {
+          textEl.textContent += text[charIndex];
+          charIndex++;
+          setTimeout(typeChar, speed);
+        }
+      };
+      typeChar();
+    }, delay);
   });
 </script>
