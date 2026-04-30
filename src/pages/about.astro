@@ -11,10 +11,15 @@ import Base from '../layouts/Base.astro';
       <!-- Introduction -->
       <div class="project-card">
         <h2 class="text-highlight text-lg font-bold mb-3">Who am I?</h2>
-        <p class="text-text-primary">
-          I'm a full-stack developer passionate about building elegant solutions
-          to complex problems. My focus is on creating performant, maintainable
-          software that makes a real impact.
+        <p class="text-text-primary leading-relaxed">
+          I'm an embedded developer and hardware engineer passionate about building
+          hardware solutions for biomedical applications and other gadgets.
+          My focus is on creating reliable, efficient embedded systems and FPGA-based
+          designs that solve real-world problems.
+        </p>
+        <p class="text-text-muted text-sm mt-3">
+          Current interests: physiological signal acquisition, video processing systems,
+          and embedded firmware development.
         </p>
       </div>
 
@@ -22,27 +27,46 @@ import Base from '../layouts/Base.astro';
       <div class="project-card">
         <h2 class="text-success text-lg font-bold mb-3">Skills & Technologies</h2>
         <div class="flex flex-wrap gap-2">
-          <span class="tag tag-react">React</span>
-          <span class="tag tag-typescript">TypeScript</span>
-          <span class="tag tag-node">Node.js</span>
-          <span class="tag tag-python">Python</span>
-          <span class="tag tag-go">Go</span>
-          <span class="tag tag-rust">Rust</span>
+          <span class="tag tag-c">C</span>
+          <span class="tag tag-verilog">Verilog</span>
+          <span class="tag tag-embedded">Embedded</span>
+          <span class="tag tag-fpga">FPGA</span>
+          <span class="tag tag-typescript">Python</span>
+          <span class="tag tag-go">STM32</span>
+          <span class="tag tag-rust">ESP32</span>
         </div>
+      </div>
+
+      <!-- Experience Areas -->
+      <div class="project-card">
+        <h2 class="text-accent text-lg font-bold mb-3">Experience Areas</h2>
+        <ul class="text-text-primary space-y-2">
+          <li class="flex items-start gap-2">
+            <span class="text-success">•</span>
+            <span>Physiological signal acquisition (ECG, SpO2, temperature)</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-success">•</span>
+            <span>FPGA video processing (HDMI, VGA, scaler, frame buffer)</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-success">•</span>
+            <span>Embedded firmware development</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-success">•</span>
+            <span>Hardware prototyping and PCB design</span>
+          </li>
+        </ul>
       </div>
 
       <!-- Contact -->
       <div class="project-card">
         <h2 class="text-accent text-lg font-bold mb-3">Get in Touch</h2>
         <div class="flex flex-col gap-3">
-          <a href="mailto:your@email.com" class="text-text-muted hover:text-accent transition-colors">
-            your@email.com
-          </a>
-          <a href="https://github.com/yourname" target="_blank" rel="noopener" class="text-text-muted hover:text-accent transition-colors">
-            GitHub: @yourname
-          </a>
-          <a href="https://linkedin.com/in/yourname" target="_blank" rel="noopener" class="text-text-muted hover:text-accent transition-colors">
-            LinkedIn: /in/yourname
+          <a href="https://github.com/moonylt" target="_blank" rel="noopener" class="text-text-muted hover:text-accent transition-colors flex items-center gap-2">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.835 1.305 3.51.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub: @moonylt
           </a>
         </div>
       </div>
