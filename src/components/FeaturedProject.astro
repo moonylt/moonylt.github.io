@@ -11,6 +11,18 @@ const { project, showFeatures = false } = Astro.props;
 ---
 
 <div class="project-card glow-accent hover:glow-accent transition-all duration-300 hover:scale-[1.02]">
+  <!-- Image -->
+  {project.image && (
+    <div class="mb-4">
+      <img
+        src={project.image}
+        alt={`${project.title} hardware`}
+        class="w-full h-48 object-cover rounded border border-border"
+        loading="lazy"
+      />
+    </div>
+  )}
+
   <!-- Header -->
   <div class="flex justify-between items-start mb-4">
     <h2 class="text-accent text-xl font-bold">★ {project.title}</h2>

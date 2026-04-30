@@ -30,6 +30,7 @@ export const projects: Project[] = [
     tech: ['C', 'Embedded'],
     github: 'https://github.com/moonylt/ECG-physio',
     featured: true,
+    image: '/images/projects/ecg-physio.jpg',
   },
   {
     slug: 'video-convertor',
@@ -49,6 +50,7 @@ export const projects: Project[] = [
     tech: ['Verilog', 'FPGA'],
     github: 'https://github.com/moonylt/Video_Covertor',
     featured: false,
+    image: '/images/projects/video-convertor.jpg',
   },
 ];
 
