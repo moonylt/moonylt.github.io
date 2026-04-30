@@ -5,4 +5,8 @@ export const techColorMap: Record<string, string> = {
   'Python': 'tag-python',
   'Go': 'tag-go',
   'Rust': 'tag-rust',
+  'C': 'tag-c',
+  'Verilog': 'tag-verilog',
+  'FPGA': 'tag-fpga',
+  'Embedded': 'tag-embedded',
 };

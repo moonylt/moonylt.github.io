@@ -67,6 +67,14 @@
   .tag-node,
   .tag-python,
   .tag-rust { @apply bg-highlight/20 text-highlight border border-highlight/40; }
+
+  /* C and Embedded - blue accent style */
+  .tag-c,
+  .tag-embedded { @apply bg-accent/20 text-accent border border-accent/40; }
+
+  /* Verilog and FPGA - purple/violet style */
+  .tag-verilog,
+  .tag-fpga { @apply bg-violet-500/20 text-violet-400 border border-violet-500/40; }
 }
 
 @layer utilities {
