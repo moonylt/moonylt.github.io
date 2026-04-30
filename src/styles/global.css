@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Courier New', monospace;
+    background: linear-gradient(180deg, #0d1117 0%, #161b22 100%);
+    color: #c9d1d9;
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: #58a6ff;
+    color: #0d1117;
+  }
+}
+
+@layer components {
+  .nav-link {
+    @apply text-text-muted hover:text-text-primary transition-colors duration-200;
+  }
+
+  .nav-link-active {
+    @apply text-text-primary border-b-2 border-accent;
+  }
+
+  .terminal-command {
+    @apply text-success;
+  }
+
+  .terminal-output {
+    @apply text-text-primary;
+  }
+
+  .terminal-cursor {
+    @apply text-accent animate-pulse;
+  }
+
+  .project-card {
+    @apply bg-bg-secondary/80 border border-border rounded-lg p-4;
+  }
+
+  .project-card:hover {
+    @apply shadow-lg shadow-accent/20;
+    transform: translateY(-2px);
+  }
+
+  .tag {
+    @apply px-2 py-1 rounded text-xs;
+  }
+
+  .tag-react { @apply bg-accent/20 text-accent border border-accent/40; }
+  .tag-typescript { @apply bg-success/20 text-success border border-success/40; }
+  .tag-node { @apply bg-highlight/20 text-highlight border border-highlight/40; }
+  .tag-python { @apply bg-highlight/20 text-highlight border border-highlight/40; }
+  .tag-go { @apply bg-accent/20 text-accent border border-accent/40; }
+  .tag-rust { @apply bg-highlight/20 text-highlight border border-highlight/40; }
+}
+
+@layer utilities {
+  .glow-accent {
+    box-shadow: 0 0 20px rgba(88, 166, 255, 0.3);
+  }
+
+  .glow-success {
+    box-shadow: 0 0 20px rgba(126, 231, 135, 0.3);
+  }
+}
+
+/* Floating particle animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotateX(10deg) rotateY(-10deg); }
+  50% { transform: translateY(-20px) rotateX(15deg) rotateY(5deg); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Blinking cursor */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.animate-blink {
+  animation: blink 1s infinite;
+}
+
+/* Typing animation */
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
