@@ -1,0 +1,44 @@
+---
+import type { Project } from '../data/projects';
+
+interface Props {
+  projects: Project[];
+}
+
+const { projects } = Astro.props;
+
+const techColorMap: Record<string, string> = {
+  'React': 'tag-react',
+  'TypeScript': 'tag-typescript',
+  'Node.js': 'tag-node',
+  'Python': 'tag-python',
+  'Go': 'tag-go',
+  'Rust': 'tag-rust',
+};
+---
+
+<div class="mt-8">
+  <h3 class="text-text-muted text-sm mb-4">Other Projects</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {projects.map((project) => (
+      <a
+        href={project.github || '#'}
+        target="_blank"
+        rel="noopener"
+        class="project-card flex justify-between items-center group"
+      >
+        <div>
+          <span class="text-accent group-hover:text-success transition-colors">{project.title}/</span>
+          <div class="flex gap-2 mt-2">
+            {project.tech.slice(0, 2).map((t) => (
+              <span class={`tag ${techColorMap[t] || 'tag-react'} text-xs`}>{t}</span>
+            ))}
+          </div>
+        </div>
+        {project.stars && (
+          <span class="text-text-muted text-sm">⭐ {project.stars}</span>
+        )}
+      </a>
+    ))}
+  </div>
+</div>

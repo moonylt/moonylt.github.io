@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import FeaturedProject from '../components/FeaturedProject.astro';
+import ProjectList from '../components/ProjectList.astro';
+import { featuredProject, otherProjects } from '../data/projects';
+---
+
+<Base title="Projects - Your Name" description="My software projects and open source contributions">
+  <section>
+    <div class="text-text-muted text-sm mb-2">~/projects</div>
+    <h1 class="text-accent text-3xl font-bold mb-8">Projects</h1>
+
+    {featuredProject && <FeaturedProject project={featuredProject} />}
+
+    {otherProjects.length > 0 && <ProjectList projects={otherProjects} />}
+  </section>
+</Base>
