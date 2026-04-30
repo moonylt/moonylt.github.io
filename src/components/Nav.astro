@@ -1,0 +1,36 @@
+---
+import MobileMenu from './MobileMenu.astro';
+
+const currentPath = Astro.url.pathname;
+
+const navItems = [
+  { name: 'home', path: '/' },
+  { name: 'projects', path: '/projects' },
+  { name: 'blog', path: '/blog' },
+  { name: 'about', path: '/about' },
+];
+---
+
+<nav class="sticky top-0 z-50 bg-bg-primary/90 backdrop-blur-sm border-b border-border">
+  <div class="max-w-6xl mx-auto px-4 md:px-8 lg:px-16 py-4 flex justify-between items-center">
+    <!-- Logo -->
+    <a href="/" class="text-accent hover:opacity-80 transition-opacity">
+      ~/portfolio
+    </a>
+
+    <!-- Desktop Nav -->
+    <div class="hidden md:flex gap-6">
+      {navItems.map((item) => (
+        <a
+          href={item.path}
+          class={`nav-link ${currentPath === item.path ? 'nav-link-active' : ''}`}
+        >
+          {item.name}
+        </a>
+      ))}
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <MobileMenu client:load navItems={navItems} currentPath={currentPath} />
+  </div>
+</nav>
