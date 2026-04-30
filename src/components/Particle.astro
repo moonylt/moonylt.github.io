@@ -1,0 +1,27 @@
+---
+interface Props {
+  color?: 'accent' | 'success' | 'highlight';
+  size?: 'sm' | 'md' | 'lg';
+  position?: { top: string; right: string };
+  delay?: number;
+}
+
+const {
+  color = 'accent',
+  size = 'md',
+  position = { top: '20%', right: '10%' },
+  delay = 0
+} = Astro.props;
+
+const sizeMap = { sm: 'w-4 h-4', md: 'w-8 h-8', lg: 'w-12 h-12' };
+const colorMap = {
+  accent: 'bg-accent/10 border-accent/30',
+  success: 'bg-success/10 border-success/30',
+  highlight: 'bg-highlight/10 border-highlight/30',
+};
+---
+
+<div
+  class={`absolute ${sizeMap[size]} ${colorMap[color]} border rounded animate-float opacity-60`}
+  style={`top: ${position.top}; right: ${position.right}; animation-delay: ${delay}s;`}
+></div>
