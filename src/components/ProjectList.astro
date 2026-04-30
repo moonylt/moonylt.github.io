@@ -15,21 +15,31 @@ const { projects } = Astro.props;
     {projects.map((project) => (
       <a
         href={`/projects/${project.slug}`}
-        class="project-card flex justify-between items-center group"
+        class="project-card group"
       >
-        <div>
-          <span class="text-accent group-hover:text-success transition-colors">{project.title}/</span>
-          <div class="flex gap-2 mt-2">
-            {project.tech.slice(0, 2).map((t) => (
-              <span class={`tag ${techColorMap[t] || ''} text-xs`}>{t}</span>
-            ))}
+        {project.image && (
+          <img
+            src={project.image}
+            alt={`${project.title} hardware`}
+            class="w-full h-32 object-cover rounded border border-border mb-3"
+            loading="lazy"
+          />
+        )}
+        <div class="flex justify-between items-center">
+          <div>
+            <span class="text-accent group-hover:text-success transition-colors">{project.title}/</span>
+            <div class="flex gap-2 mt-2">
+              {project.tech.slice(0, 2).map((t) => (
+                <span class={`tag ${techColorMap[t] || ''} text-xs`}>{t}</span>
+              ))}
+            </div>
           </div>
-        </div>
-        <div class="flex items-center gap-2">
-          {project.stars && (
-            <span class="text-text-muted text-sm">⭐ {project.stars}</span>
-          )}
-          <span class="text-text-muted text-sm group-hover:text-success transition-colors">→</span>
+          <div class="flex items-center gap-2">
+            {project.stars && (
+              <span class="text-text-muted text-sm">⭐ {project.stars}</span>
+            )}
+            <span class="text-text-muted text-sm group-hover:text-success transition-colors">→</span>
+          </div>
         </div>
       </a>
     ))}
