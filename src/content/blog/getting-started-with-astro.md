@@ -3,7 +3,7 @@ title: Getting Started with Astro
 pubDate: 2024-02-20
 ---
 
-Astro is an excellent choice for building fast, content-focused websites. Here's why I chose it for my portfolio.
+Astro is an excellent choice for building fast, content-focused websites. Here's why I chose it for my site.
 
 ## Key Benefits
 
