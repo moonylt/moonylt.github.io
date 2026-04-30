@@ -1,20 +1,12 @@
 ---
 import type { Project } from '../data/projects';
+import { techColorMap } from '../data/techColors';
 
 interface Props {
   project: Project;
 }
 
 const { project } = Astro.props;
-
-const techColorMap: Record<string, string> = {
-  'React': 'tag-react',
-  'TypeScript': 'tag-typescript',
-  'Node.js': 'tag-node',
-  'Python': 'tag-python',
-  'Go': 'tag-go',
-  'Rust': 'tag-rust',
-};
 ---
 
 <div class="project-card glow-accent hover:glow-accent transition-all duration-300 hover:scale-[1.02]">
