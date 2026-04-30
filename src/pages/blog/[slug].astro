@@ -1,20 +1,17 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 
-const { slug } = Astro.params;
-
-if (!slug) {
-  return Astro.redirect('/blog');
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
 }
 
-const posts = await getCollection('blog');
-const post = posts.find((p) => p.id === slug);
-
-if (!post) {
-  return Astro.redirect('/blog');
-}
-
+const { post }: { post: CollectionEntry<'blog'> } = Astro.props;
 const { Content } = await render(post);
 
 const date = new Date(post.data.pubDate);
@@ -27,7 +24,7 @@ const dateStr = date.toLocaleDateString('en-US', {
 
 <Base title={`${post.data.title} - Your Name`} description={post.data.description}>
   <article>
-    <div class="text-text-muted text-sm mb-2">~/blog/{slug}.md</div>
+    <div class="text-text-muted text-sm mb-2">~/blog/{post.id}.md</div>
 
     <header class="mb-8">
       <h1 class="text-accent text-3xl font-bold">{post.data.title}</h1>
