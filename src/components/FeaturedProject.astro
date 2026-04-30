@@ -17,7 +17,7 @@ const { project, showFeatures = false } = Astro.props;
       <img
         src={project.image}
         alt={`${project.title} hardware`}
-        class="w-full h-48 object-cover rounded border border-border"
+        class={`w-full rounded border border-border ${showFeatures ? 'h-auto max-h-[600px] object-contain' : 'h-48 object-cover'}`}
         loading="lazy"
       />
     </div>
