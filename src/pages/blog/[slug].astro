@@ -1,0 +1,41 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect('/blog');
+}
+
+const posts = await getCollection('blog');
+const post = posts.find((p) => p.id === slug);
+
+if (!post) {
+  return Astro.redirect('/blog');
+}
+
+const { Content } = await render(post);
+
+const date = new Date(post.data.pubDate);
+const dateStr = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<Base title={`${post.data.title} - Your Name`} description={post.data.description}>
+  <article>
+    <div class="text-text-muted text-sm mb-2">~/blog/{slug}.md</div>
+
+    <header class="mb-8">
+      <h1 class="text-accent text-3xl font-bold">{post.data.title}</h1>
+      <time class="text-text-muted text-sm mt-2">{dateStr}</time>
+    </header>
+
+    <div class="prose prose-invert max-w-none">
+      <Content />
+    </div>
+  </article>
+</Base>
