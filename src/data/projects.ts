@@ -11,6 +11,8 @@ export interface Project {
   stars?: number;
   featured: boolean;
   image?: string;
+  systemDiagram?: string;
+  hardwareSpecs?: { component: string; model: string }[];
 }
 
 export const projects: Project[] = [
@@ -51,6 +53,37 @@ export const projects: Project[] = [
     github: 'https://github.com/moonylt/Video_Covertor',
     featured: false,
     image: '/images/projects/video-convertor.jpg',
+    systemDiagram: `
+                    ┌─────────────────────────────────────────────────────┐
+                    │                    Video Converter                   │
+                    └─────────────────────────────────────────────────────┘
+                                            ▲
+                                            │ HDMI In
+                    ┌─────────────────────────────────────────────────────┐
+   HDMI Source ────│  TFP401A   ┌───────────────────────┐    TFP410    │───► HDMI Display
+                    │  Receiver  │                       │  Transmitter │
+                    └────────────│      Spartan-6 FPGA   │──────────────┘
+                                 │      (XC6SLX45)       │
+                    ┌────────────│                       │──────────────┐
+                    │  DDR3L     │    ┌───────────┐      │   ADV7125    │───► VGA Monitor
+                    │  256MB     │    │  Scaler   │      │   VGA DAC    │
+                    │  Frame     │    │  Buffer   │      │──────────────┘
+                    │  Buffer    │    │  PIP      │      │   ADV7393    │───► CVBS/S-Video
+                    └────────────│    └───────────┘      │   Encoder    │
+                                 │                       │──────────────┘
+                    ┌────────────│      50MHz CLK        │──────────────┐
+                    │   Buttons  │                       │    LEDs      │
+                    │   (BTN0)   │                       │   (Status)   │
+                    └────────────┴───────────────────────┴──────────────┘`,
+    hardwareSpecs: [
+      { component: 'FPGA', model: 'Xilinx Spartan-6 XC6SLX45-3FGG484I' },
+      { component: 'HDMI Receiver', model: 'TFP401A' },
+      { component: 'HDMI Transmitter', model: 'TFP410' },
+      { component: 'VGA DAC', model: 'ADV7125 (8-bit RGB)' },
+      { component: 'Video Encoder', model: 'ADV7393 (CVBS/S-Video)' },
+      { component: 'DDR3L', model: '256MB' },
+      { component: 'System Clock', model: '50MHz' },
+    ],
   },
 ];
 

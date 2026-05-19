@@ -61,6 +61,31 @@ const { project, showFeatures = false } = Astro.props;
     </div>
   )}
 
+  <!-- System Diagram -->
+  {showFeatures && project.systemDiagram && (
+    <div class="mb-4">
+      <h3 class="text-text-muted text-sm mb-2">📊 System Block Diagram:</h3>
+      <pre class="text-text-primary text-xs bg-bg-secondary/50 p-4 rounded border border-border overflow-x-auto whitespace-pre font-mono">{project.systemDiagram}</pre>
+    </div>
+  )}
+
+  <!-- Hardware Specs -->
+  {showFeatures && project.hardwareSpecs && (
+    <div class="mb-4">
+      <h3 class="text-text-muted text-sm mb-2">🔧 Hardware Specifications:</h3>
+      <table class="w-full text-text-primary text-sm">
+        <tbody>
+          {project.hardwareSpecs.map((spec) => (
+            <tr class="border-b border-border/50">
+              <td class="py-2 text-accent font-medium">{spec.component}</td>
+              <td class="py-2">{spec.model}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )}
+
   <!-- Tech Tags -->
   <div class="flex gap-2 mb-4">
     {project.tech.map((t) => (
