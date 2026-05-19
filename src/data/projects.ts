@@ -38,7 +38,7 @@ export const projects: Project[] = [
     slug: 'video-convertor',
     title: 'Video Convertor',
     description: 'FPGA-based video processing system with HDMI input/output, VGA output, S-video output.',
-    detailedDescription: '基于 Spartan-6 FPGA 的视频转换处理平台，支持多种视频格式输入输出。',
+    detailedDescription: 'FPGA-based video processing platform supporting multiple video format input/output.',
     features: [
       'HDMI Video Capture',
       'HDMI Video Output',
