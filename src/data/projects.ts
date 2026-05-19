@@ -32,6 +32,51 @@ export const projects: Project[] = [
     github: 'https://github.com/moonylt/ECG-physio',
     featured: true,
     image: '/images/projects/ecg-physio.jpg',
+    systemDiagram: `
+                    ┌─────────────────────────────────────────────────────────────────────────┐
+                    │                 Physiological Signal Monitoring System (PHYSIO)          │
+                    │                       STM32F429ZGT6 Main Controller                      │
+                    └─────────────────────────────────────────────────────────────────────────┘
+                                            ▲                    ▲
+                                            │ UART               │ WiFi (ESP32)
+                    ┌─────────────────────────────────────────────────────────────────────────┐
+                    │  ┌─────────────┐    ┌───────────────────────────────────┐    ┌─────────┐│
+   Physiological ──│  │ ADS1298R    │    │          STM32F429ZGT6            │    │ ESP32   ││───► WiFi
+   Signals         │  │ ECG+Resp    │SPI │                                   │UART│ WiFi    ││    Transfer
+   (ECG/Resp)      │  │ AFE Chip    │────│  • SPI Interface (ADS1298R/MAX31856)│────│ Module  ││
+                    │  └─────────────┘    │  • I2C Interface (TMP117/AFE4490) │    └─────────┘│
+                    │                     │  • DAC Output (PID Temp Control)  │               │
+   Oximetry ───────│  ┌─────────────┐    │  • UART Data Transmission         │               │
+   (SPO2)          │  │ AFE4490     │I2C │                                   │               │
+                    │  │ SPO2 AFE    │────│  ┌───────────────────────────┐    │               │
+                    │  └─────────────┘    │  │    PID Temperature Control │    │               │
+                    │                     │  │    ECG/Resp Signal Process  │    │               │
+   Temperature ────│  ┌─────────────┐    │  │    SPO2 Calculation         │    │               │
+   (Body Temp)     │  │ TMP117      │I2C │  │    Data Packaging/Transfer  │    │               │
+                    │  │ Temp Sensor │────│  └───────────────────────────┘    │               │
+                    │  └─────────────┘    │                                   │               │
+                    │                     │  ┌─────────┐    ┌─────────────┐   │               │
+   Thermocouple ───│  ┌─────────────┐    │  │ DAC     │    │ PWM Output  │   │               │
+   (Animal Temp)   │  │ MAX31856    │SPI │  │ Temp Ctrl│    │ Clock Signal│   │               │
+                    │  │ TC Interface│────│  └─────────┘    └─────────────┘   │               │
+                    │  └─────────────┘    │                                   │               │
+                    │                     └───────────────────────────────────┘               │
+                    │  ┌─────────────┐                                                        │
+   Heater ─────────│  │ PNP Heater  │──────────────────────────────────────────────────────│───► Maintain
+   (Temp Maintain) │  │ PCB Heater  │                                                        │    Body Temp
+                    │  └─────────────┘                                                        │
+                    └─────────────────────────────────────────────────────────────────────────┘
+                                            │ UART/USB
+                                            ▼
+                    ┌─────────────────────────────────────────────────────────────────────────┐
+                    │                      Python Console Software                             │
+                    │  ┌─────────────────────────────────────────────────────────────────────┐│
+                    │  │  • 4-Channel ECG Waveform Display  • Real-time FFT Spectrum Analysis ││
+                    │  │  • Respiration Waveform Display     • Heart Rate/Resp Rate Calculation││
+                    │  │  • Temperature Monitoring           • PID Temperature Control          ││
+                    │  │  • Data Save (CSV)                  • WiFi/Serial Dual-mode Comm       ││
+                    │  └─────────────────────────────────────────────────────────────────────┘│
+                    └─────────────────────────────────────────────────────────────────────────┘`,
   },
   {
     slug: 'video-convertor',
