@@ -12,7 +12,6 @@ export interface Project {
   featured: boolean;
   image?: string;
   systemDiagram?: string;
-  hardwareSpecs?: { component: string; model: string }[];
 }
 
 export const projects: Project[] = [
@@ -75,15 +74,6 @@ export const projects: Project[] = [
                     │   Buttons  │                       │    LEDs      │
                     │   (BTN0)   │                       │   (Status)   │
                     └────────────┴───────────────────────┴──────────────┘`,
-    hardwareSpecs: [
-      { component: 'FPGA', model: 'Xilinx Spartan-6 XC6SLX45-3FGG484I' },
-      { component: 'HDMI Receiver', model: 'TFP401A' },
-      { component: 'HDMI Transmitter', model: 'TFP410' },
-      { component: 'VGA DAC', model: 'ADV7125 (8-bit RGB)' },
-      { component: 'Video Encoder', model: 'ADV7393 (CVBS/S-Video)' },
-      { component: 'DDR3L', model: '256MB' },
-      { component: 'System Clock', model: '50MHz' },
-    ],
   },
 ];
 
