@@ -1,5 +1,6 @@
 ---
 const currentYear = new Date().getFullYear();
+const email = 'yueliteng@gmail.com';
 ---
 
 <footer class="border-t border-border py-6 mt-auto">
@@ -11,9 +12,32 @@ const currentYear = new Date().getFullYear();
       <a href="https://github.com/moonylt" target="_blank" rel="noopener" class="text-text-muted hover:text-accent transition-colors">
         GitHub
       </a>
-      <a href="mailto:yueliteng@gmail.com" class="text-text-muted hover:text-accent transition-colors">
+      <button
+        id="email-btn"
+        class="text-text-muted hover:text-accent transition-colors cursor-pointer"
+        title="Click to copy email address"
+      >
         Email
-      </a>
+      </button>
     </div>
   </div>
+  <script define:vars={{ email }}>
+    document.getElementById('email-btn')?.addEventListener('click', async (e) => {
+      e.preventDefault();
+      try {
+        await navigator.clipboard.writeText(email);
+        const btn = document.getElementById('email-btn');
+        const originalText = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.classList.add('text-success');
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.classList.remove('text-success');
+        }, 2000);
+      } catch (err) {
+        // Fallback: open mailto
+        window.location.href = `mailto:${email}`;
+      }
+    });
+  </script>
 </footer>
