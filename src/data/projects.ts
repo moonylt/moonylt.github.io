@@ -108,6 +108,9 @@ export const projects: Project[] = [
     github: 'https://github.com/moonylt/Video_Covertor',
     featured: false,
     image: '/images/projects/video-convertor.jpg',
+    gallery: [
+      { src: '/images/projects/video-convertor.jpg', caption: 'Spartan-6 FPGA HDMI/VGA conversion board' },
+    ],
     systemDiagram: `
                     ┌─────────────────────────────────────────────────────┐
                     │                    Video Converter                   │
