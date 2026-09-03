@@ -1,0 +1,60 @@
+---
+/**
+ * First-visit BIOS/POST boot sequence on the homepage.
+ * ~2.4s total, click/key skips it. Once per browser session.
+ */
+---
+<div id="boot" class="fixed inset-0 z-[10000] bg-[#05070a] font-mono text-sm text-[#4dd0e1] p-6 md:p-12 cursor-pointer select-none">
+  <div id="boot-lines" class="whitespace-pre-wrap leading-relaxed"></div>
+  <div class="absolute bottom-6 right-8 text-text-muted text-xs opacity-70">press any key to skip_</div>
+</div>
+
+<script>
+  if (!sessionStorage.getItem('geek-booted')) {
+    sessionStorage.setItem('geek-booted', '1');
+    const boot = document.getElementById('boot') as HTMLDivElement;
+    const linesEl = document.getElementById('boot-lines') as HTMLDivElement;
+    document.body.style.overflow = 'hidden';
+
+    const LINES = [
+      'MOONYLT(R) BIOS v2.6.1 — PHYSIO PLATFORM',
+      'Copyright (C) 2026, moonylt Labs',
+      '',
+      'Memory Test ......................... 262144K OK',
+      'Detecting IDE drives ................ 2 found',
+      'Mounting /projects .................. 2 volumes',
+      'Loading ESP32 wifi stack ............ 819200 baud OK',
+      'Init ADS1298R (ECG+RESP) ............ 500sps OK',
+      'Init AFE4490 (SPO2) ................. 100sps OK',
+      'Heater PID .......................... target 38.0C',
+      '8Ch DAC output module ............... LINK',
+      '',
+      '> boot',
+    ];
+
+    let li = 0;
+    const timer = setInterval(() => {
+      if (li < LINES.length) {
+        linesEl.textContent += LINES[li++] + '\n';
+      } else {
+        clearInterval(timer);
+        setTimeout(finish, 450);
+      }
+    }, 150);
+
+    const finish = () => {
+      clearInterval(timer);
+      boot.style.transition = 'opacity 0.5s';
+      boot.style.opacity = '0';
+      document.body.style.overflow = '';
+      setTimeout(() => boot.remove(), 550);
+      window.removeEventListener('keydown', finish);
+      boot.removeEventListener('click', finish);
+    };
+
+    window.addEventListener('keydown', finish);
+    boot.addEventListener('click', finish);
+  } else {
+    document.getElementById('boot')?.remove();
+  }
+</script>

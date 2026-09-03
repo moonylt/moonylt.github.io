@@ -2,6 +2,7 @@
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import GeekEggs from '../components/GeekEggs.astro';
+import CommandPalette from '../components/CommandPalette.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -35,5 +36,6 @@ const { title, description = 'Personal website and blog' } = Astro.props;
     </main>
     <Footer />
     <GeekEggs />
+    <CommandPalette />
   </body>
 </html>

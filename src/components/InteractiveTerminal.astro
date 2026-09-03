@@ -61,6 +61,8 @@
       print('  date          current time');
       print('  matrix        ???');
       print('  sudo          try it');
+      print('  sound on|off  retro beeper');
+      print('  (Ctrl+K anywhere = quick nav)');
       print('  clear         clear screen');
     },
     whoami: () => {
@@ -80,7 +82,12 @@
     date: () => print(new Date().toString()),
     uptime: () => print('site running since you opened it — time flies when blinking cursors'),
     clear: () => (out.innerHTML = ''),
-    sudo: () => print('guest is not in the sudoers file. this incident will be reported.', 'text-[#ff5f57]'),
+    sudo: () => {
+      print('[sudo] password for guest:', 'text-text-muted');
+      print('(it will be echoed — security is a meme here)', 'text-text-muted');
+      awaitingPwd = true;
+    },
+    sound: undefined as unknown as () => void,
     exit: () => print('there is no escape. this is a static website.', 'text-text-muted'),
     hello: () => print('hello, stranger :)'),
     neofetch: () => {
@@ -92,10 +99,15 @@
       print('Uptime  : ' + Math.round(performance.now() / 1000) + 's (this tab)');
       print('Shell   : fake-zsh 1.0');
       print('Board   : STM32F429 + ESP32 + 8Ch DAC');
-      print('Memory  : ' + (performance as unknown as { memory?: { usedJSHeapSize: number } }).memory
-        ? Math.round(((performance as unknown as { memory: { usedJSHeapSize: number } }).memory.usedJSHeapSize) / 1048576) + ' MiB JS heap'
-        : 'n/a');
+      const mem = (performance as unknown as { memory?: { usedJSHeapSize: number } }).memory;
+      print('Memory  : ' + (mem ? Math.round(mem.usedJSHeapSize / 1048576) + ' MiB JS heap' : 'n/a'));
     },
+  };
+  CMDS['sound'] = () => {
+    const arg = (lastArgs[1] || '').toLowerCase();
+    if (arg === 'on') { soundOn = true; localStorage.setItem('geek-sound', '1'); print('beep enabled. clack clack.'); }
+    else if (arg === 'off') { soundOn = false; localStorage.setItem('geek-sound', '0'); print('silence.'); }
+    else print('usage: sound on|off   (currently ' + (soundOn ? 'on' : 'off') + ')');
   };
   CMDS['open'] = () => {
     const arg = (lastArgs[1] || '').toLowerCase().replace(/\/$/, '');
@@ -109,14 +121,81 @@
     }
   };
 
+  // ---- retro beeper (WebAudio, off by default: `sound on`) ----
+  let soundOn = localStorage.getItem('geek-sound') === '1';
+  let ac: AudioContext | null = null;
+  function beep(freq: number, ms: number) {
+    if (!soundOn) return;
+    try {
+      ac = ac || new AudioContext();
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.type = 'square'; o.frequency.value = freq;
+      g.gain.value = 0.02;
+      o.connect(g); g.connect(ac.destination);
+      o.start(); o.stop(ac.currentTime + ms / 1000);
+    } catch { /* autoplay policy */ }
+  }
+
+  // ---- sudo / root shell ----
+  let awaitingPwd = false;
+  let rootMode = false;
+  const promptEl = document.querySelector('#iterm .text-success') as HTMLElement;
+
+  function setPrompt(root: boolean) {
+    if (promptEl) {
+      promptEl.textContent = root ? 'root@moonylt:~#' : 'guest@moonylt:~$';
+      promptEl.className = (root ? 'text-[#ff5f57]' : 'text-success') + ' whitespace-nowrap';
+    }
+  }
+  function meltdown() {
+    const junk = '0123456789ABCDEF';
+    let n = 0;
+    const t = setInterval(() => {
+      print(Array.from({ length: 3 }, () =>
+        'Killing process ' + Math.floor(Math.random() * 9999) + ' ' +
+        Array.from({ length: 24 }, () => junk[Math.floor(Math.random() * 16)]).join('')), 'text-[#ff5f57]');
+      if (++n > 10) {
+        clearInterval(t);
+        print('just kidding. static sites are immutable.', 'text-highlight');
+        rootMode = false; setPrompt(false);
+      }
+    }, 60);
+  }
+
   let history: string[] = [];
   let hIdx = -1;
   let lastArgs: string[] = [];
 
   function run(raw: string) {
     const line = raw.trim();
+    beep(880, 30);
     if (!line) return;
-    print('guest@moonylt:~$ ' + line, 'text-success');
+    print((rootMode ? 'root@moonylt:~# ' : 'guest@moonylt:~$ ') + line, rootMode ? 'text-[#ff5f57]' : 'text-success');
+
+    if (awaitingPwd) {
+      awaitingPwd = false;
+      if (line.length > 0) {
+        rootMode = true; setPrompt(true);
+        print('Access granted. root shell unlocked.', 'text-highlight');
+        print('you are now god of this static site. try `rm -rf /` … or `poweroff`', 'text-text-muted');
+      } else {
+        print('Password incorrect.', 'text-[#ff5f57]');
+      }
+      return;
+    }
+    if (rootMode) {
+      if (line === 'rm -rf /' || line.startsWith('rm -rf')) { meltdown(); return; }
+      if (line === 'poweroff') {
+        print('It is now safe to turn off your computer.', 'text-highlight');
+        const off = document.createElement('div');
+        off.className = 'fixed inset-0 z-[10001] bg-black text-[#ffb74d] font-mono flex items-center justify-center cursor-pointer';
+        off.textContent = 'It is now safe to turn off your computer. (click)';
+        off.addEventListener('click', () => off.remove());
+        document.body.appendChild(off);
+        return;
+      }
+      if (line === 'exit') { rootMode = false; setPrompt(false); print('back to guest.'); return; }
+    }
     history.push(line);
     hIdx = history.length;
     const parts = line.split(/\s+/);

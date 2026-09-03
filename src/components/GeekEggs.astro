@@ -104,6 +104,24 @@
   // ---------- footer live status line ----------
   const boot = Date.now();
   const el = document.getElementById('footer-status');
+  let ghStat = '';
+  const cached = localStorage.getItem('geek-gh');
+  if (cached) {
+    try {
+      const c = JSON.parse(cached);
+      if (Date.now() - c.t < 3600e3) ghStat = ` · gh: ${c.repos} repos ★${c.stars}`;
+    } catch { /* ignore */ }
+  }
+  if (!ghStat) {
+    fetch('https://api.github.com/users/moonylt/repos?per_page=100')
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then((repos: { stargazers_count: number }[]) => {
+        const stars = repos.reduce((a, r) => a + (r.stargazers_count || 0), 0);
+        ghStat = ` · gh: ${repos.length} repos ★${stars}`;
+        localStorage.setItem('geek-gh', JSON.stringify({ t: Date.now(), repos: repos.length, stars }));
+      })
+      .catch(() => {});
+  }
   if (el) {
     setInterval(() => {
       const up = Math.floor((Date.now() - boot) / 1000);
@@ -111,7 +129,17 @@
       const mm = String(Math.floor((up % 3600) / 60)).padStart(2, '0');
       const ss = String(up % 60).padStart(2, '0');
       const now = new Date().toTimeString().slice(0, 8);
-      el.textContent = `[${now}] uptime ${hh}:${mm}:${ss} · all systems nominal`;
+      el.textContent = `[${now}] uptime ${hh}:${mm}:${ss} · all systems nominal${ghStat}`;
     }, 1000);
   }
+
+  // ---------- public API (palette / terminal reuse) ----------
+  (window as unknown as { __geek: object }).__geek = {
+    matrixRain,
+    toggleCrt: () => {
+      const crt = document.documentElement.classList.toggle('crt');
+      if (crt) matrixRain(4);
+      return crt;
+    },
+  };
 </script>
