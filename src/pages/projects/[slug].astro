@@ -18,8 +18,8 @@ const { project } = Astro.props;
     <div class="text-text-muted text-sm mb-2">~/projects/{project.slug}</div>
     <h1 class="text-accent text-3xl font-bold mb-8">{project.title}</h1>
 
-    <!-- Featured-style card with full features -->
-    <FeaturedProject project={project} showFeatures={true} />
+    <!-- Featured-style card with full features (cover image stays on the listing page) -->
+    <FeaturedProject project={{ ...project, image: undefined }} showFeatures={true} />
 
     <!-- Back link -->
     <a href="/projects" class="text-text-muted hover:text-accent transition-colors mt-8 inline-block">
