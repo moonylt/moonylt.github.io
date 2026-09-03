@@ -27,6 +27,7 @@ export const projects: Project[] = [
       'Heater control (maintains animal temperature)',
       'Blood pressure',
       'Data output (Wireless and wired)',
+      'Signal replay module (8ch DAC reconstruction, common baseline)',
     ],
     tech: ['C', 'Embedded'],
     github: 'https://github.com/moonylt/ECG-physio',
@@ -65,6 +66,11 @@ export const projects: Project[] = [
    Heater ─────────│  │ PNP Heater  │──────────────────────────────────────────────────────│───► Maintain
    (Temp Maintain) │  │ PCB Heater  │                                                        │    Body Temp
                     │  └─────────────┘                                                        │
+                    │                                                                         │
+   Signal Replay ──│  ┌─────────────┐     ┌─────────────────────────────────────────────┐ │
+   (Research)      │  │ 8Ch DAC Mod │◄────│ DAC-reconstructed ECG/Resp/SpO2/Temp signals │ │───► DAQ
+                    │  └─────────────┘     │ on a common baseline, 8 analog channels     │ │
+                    │                      └─────────────────────────────────────────────┘ │
                     └─────────────────────────────────────────────────────────────────────────┘
                                             │ UART/USB
                                             ▼
