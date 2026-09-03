@@ -11,6 +11,7 @@ export interface Project {
   stars?: number;
   featured: boolean;
   image?: string;
+  gallery?: { src: string; caption: string }[];
   systemDiagram?: string;
 }
 
@@ -33,6 +34,10 @@ export const projects: Project[] = [
     github: 'https://github.com/moonylt/ECG-physio',
     featured: true,
     image: '/images/projects/ecg-physio.jpg',
+    gallery: [
+      { src: '/images/projects/ecg-physio.jpg', caption: 'Main board - STM32F429 + ADS1298R / AFE4490 / TMP117 / MAX31856' },
+      { src: '/images/projects/ecg-physio-out.jpg', caption: 'Signal output module - 8ch DAC reconstruction on a common baseline for research DAQ' },
+    ],
     systemDiagram: `
                     ┌─────────────────────────────────────────────────────────────────────────┐
                     │                 Physiological Signal Monitoring System (PHYSIO)          │

@@ -23,6 +23,24 @@ const { project, showFeatures = false } = Astro.props;
     </div>
   )}
 
+  <!-- Gallery (detail pages only) -->
+  {showFeatures && project.gallery && project.gallery.length > 0 && (
+    <div class="mb-4">
+      <h3 class="text-text-muted text-sm mb-2">Hardware Photos:</h3>
+      {project.gallery.map((g) => (
+        <figure class="mb-4">
+          <img
+            src={g.src}
+            alt={g.caption}
+            class="w-full rounded border border-border h-auto object-contain"
+            loading="lazy"
+          />
+          <figcaption class="text-text-muted text-xs mt-1">{g.caption}</figcaption>
+        </figure>
+      ))}
+    </div>
+  )}
+
   <!-- Header -->
   <div class="flex justify-between items-start mb-4">
     <h2 class="text-accent text-xl font-bold">★ {project.title}</h2>
