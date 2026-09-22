@@ -50,7 +50,7 @@
         head: Math.random() * (height + 240),
         speed: (compact ? 12 : 17) + Math.random() * 15,
         bits: Array.from({ length: compact ? 11 : 16 }, () => Math.random() > .5 ? '1' : '0'),
-        opacity: .055 + Math.random() * (compact ? .035 : .07),
+        opacity: .07 + Math.random() * (compact ? .05 : .09),
       }));
       pointer.active = false;
       pointer.strength = 0;
@@ -64,8 +64,8 @@
       ctx.textAlign = 'center';
       if (pointer.strength > .01) {
         const halo = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 180);
-        halo.addColorStop(0, `rgba(146, 186, 235, ${.045 * pointer.strength})`);
-        halo.addColorStop(1, 'rgba(146, 186, 235, 0)');
+        halo.addColorStop(0, `rgba(126, 231, 158, ${.05 * pointer.strength})`);
+        halo.addColorStop(1, 'rgba(126, 231, 158, 0)');
         ctx.fillStyle = halo;
         ctx.fillRect(0, 0, width, height);
       }
@@ -79,11 +79,27 @@
           const influence = Math.max(0, 1 - distance / 170) ** 2 * pointer.strength;
           const displacement = influence * 22;
           const fade = 1 - index / stream.bits.length;
-          const alpha = stream.opacity * fade + influence * .35;
-          ctx.fillStyle = `rgba(185, 208, 239, ${alpha})`;
+          // Matrix-style phosphor: bright head with glow, green trail, occasional flicker.
+          const twinkle = Math.random() < .012 ? .3 : 0;
+          const headBoost = index === 0 ? .55 : index < 3 ? (3 - index) * .14 : 0;
+          const alpha = Math.min(1, stream.opacity * fade + headBoost + twinkle + influence * .35);
+          if (index === 0) {
+            ctx.shadowColor = 'rgba(120, 255, 160, .95)';
+            ctx.shadowBlur = compact ? 9 : 14;
+            ctx.fillStyle = `rgba(220, 255, 230, ${alpha})`;
+          } else if (index < 3) {
+            ctx.shadowColor = 'rgba(90, 240, 130, .5)';
+            ctx.shadowBlur = compact ? 4 : 7;
+            ctx.fillStyle = `rgba(126, 231, 158, ${alpha})`;
+          } else {
+            ctx.shadowBlur = 0;
+            ctx.shadowColor = 'transparent';
+            ctx.fillStyle = `rgba(126, 231, 158, ${alpha})`;
+          }
           ctx.fillText(stream.bits[index], stream.x + dx / (distance || 1) * displacement, y + dy / (distance || 1) * displacement);
         }
       }
+      ctx.shadowBlur = 0;
     }
 
     function animate(time: number) {
