@@ -64,8 +64,8 @@
       ctx.textAlign = 'center';
       if (pointer.strength > .01) {
         const halo = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 180);
-        halo.addColorStop(0, `rgba(126, 210, 153, ${.045 * pointer.strength})`);
-        halo.addColorStop(1, 'rgba(126, 210, 153, 0)');
+        halo.addColorStop(0, `rgba(146, 186, 235, ${.045 * pointer.strength})`);
+        halo.addColorStop(1, 'rgba(146, 186, 235, 0)');
         ctx.fillStyle = halo;
         ctx.fillRect(0, 0, width, height);
       }
@@ -80,7 +80,7 @@
           const displacement = influence * 22;
           const fade = 1 - index / stream.bits.length;
           const alpha = stream.opacity * fade + influence * .35;
-          ctx.fillStyle = `rgba(166, 224, 179, ${alpha})`;
+          ctx.fillStyle = `rgba(185, 208, 239, ${alpha})`;
           ctx.fillText(stream.bits[index], stream.x + dx / (distance || 1) * displacement, y + dy / (distance || 1) * displacement);
         }
       }
