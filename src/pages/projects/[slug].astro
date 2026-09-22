@@ -2,28 +2,17 @@
 import Base from '../../layouts/Base.astro';
 import FeaturedProject from '../../components/FeaturedProject.astro';
 import { projects } from '../../data/projects';
-
 export function getStaticPaths() {
-  return projects.map((project) => ({
-    params: { slug: project.slug },
-    props: { project },
-  }));
+  return projects.map(project => ({ params: { slug: project.slug }, props: { project } }));
 }
-
 const { project } = Astro.props;
+const nextProject = projects.find(other => other.slug !== project.slug);
 ---
-
-<Base title={`${project.title} - moonylt`} description={project.description}>
-  <section>
-    <div class="text-text-muted text-sm mb-2">~/projects/{project.slug}</div>
-    <h1 class="text-accent text-3xl font-bold mb-8">{project.title}</h1>
-
-    <!-- Featured-style card with full features (cover image stays on the listing page) -->
-    <FeaturedProject project={{ ...project, image: undefined }} showFeatures={true} />
-
-    <!-- Back link -->
-    <a href="/projects" class="text-text-muted hover:text-accent transition-colors mt-8 inline-block">
-      ← Back to Projects
-    </a>
-  </section>
+<Base title={`${project.title} — moonylt`} description={project.description}>
+  <article class="project-detail">
+    <a href="/projects" class="back-link">← All projects</a>
+    <header class="page-heading"><p class="eyebrow">{project.slug === 'ecg-physio' ? 'BIOMEDICAL / EMBEDDED SYSTEMS' : 'VIDEO PROCESSING / FPGA'}</p><h1>{project.title}</h1><p>{project.description}</p></header>
+    <FeaturedProject project={project} showFeatures />
+    {nextProject && <div class="related-project"><div><p class="eyebrow">KEEP EXPLORING</p><h2>{nextProject.title}</h2></div><a href={`/projects/${nextProject.slug}`} class="button button-quiet">Next project <span aria-hidden="true">→</span></a></div>}
+  </article>
 </Base>

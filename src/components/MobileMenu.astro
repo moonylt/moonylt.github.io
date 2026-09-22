@@ -1,62 +1,32 @@
 ---
-interface Props {
-  navItems: { name: string; path: string }[];
-  currentPath: string;
-}
-
+interface Props { navItems: { name: string; path: string }[]; currentPath: string; }
 const { navItems, currentPath } = Astro.props;
 ---
-
-<div class="md:hidden relative">
-  <button
-    id="menu-toggle"
-    aria-label="Toggle menu"
-    aria-expanded="false"
-    aria-controls="mobile-menu"
-    class="text-text-muted hover:text-text-primary p-2"
-  >
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-    </svg>
-  </button>
-
-  <div id="mobile-menu" class="hidden absolute right-0 mt-2 bg-bg-secondary border border-border rounded-lg p-4 min-w-[150px]">
-    {navItems.map((item) => (
-      <a
-        href={item.path}
-        class={`block py-2 nav-link ${currentPath === item.path ? 'nav-link-active' : ''}`}
-      >
-        {item.name}
-      </a>
-    ))}
+<details class="mobile-nav" id="mobile-nav">
+  <summary aria-label="Navigation menu">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    <span>Menu</span>
+  </summary>
+  <div class="mobile-nav-panel">
+    {navItems.map(item => {
+      const active = item.path === '/' ? currentPath === '/' : currentPath.startsWith(item.path);
+      return <a href={item.path} class:list={['nav-link', { 'nav-link-active': active }]} aria-current={active ? 'page' : undefined}>{item.name}<span aria-hidden="true">↗</span></a>;
+    })}
   </div>
-</div>
-
+</details>
 <script>
-  const toggle = document.getElementById('menu-toggle');
-  const menu = document.getElementById('mobile-menu');
-
-  toggle?.addEventListener('click', () => {
-    const isHidden = menu?.classList.contains('hidden');
-    menu?.classList.toggle('hidden');
-    toggle?.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+  const menu = document.querySelector<HTMLDetailsElement>('#mobile-nav');
+  const summary = menu?.querySelector('summary');
+  document.addEventListener('click', event => {
+    if (event.target instanceof Node && !menu?.contains(event.target) && menu) menu.open = false;
   });
-
-  // Close menu when clicking outside
-  document.addEventListener('click', (e) => {
-    const target = e.target;
-    if (target instanceof Node && !toggle?.contains(target) && !menu?.contains(target)) {
-      menu?.classList.add('hidden');
-      toggle?.setAttribute('aria-expanded', 'false');
-    }
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && menu?.open) { menu.open = false; summary?.focus(); }
   });
-
-  // Close menu when pressing Escape
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !menu?.classList.contains('hidden')) {
-      menu?.classList.add('hidden');
-      toggle?.setAttribute('aria-expanded', 'false');
-      toggle?.focus();
-    }
+  menu?.addEventListener('focusout', event => {
+    if (event.relatedTarget instanceof Node && !menu.contains(event.relatedTarget)) menu.open = false;
+  });
+  window.matchMedia('(min-width: 768px)').addEventListener('change', event => {
+    if (event.matches && menu) menu.open = false;
   });
 </script>

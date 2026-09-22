@@ -2,37 +2,18 @@
 import Base from '../../layouts/Base.astro';
 import { getCollection, render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
-
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: { post },
-  }));
+  return (await getCollection('blog')).map(post => ({ params: { slug: post.id }, props: { post } }));
 }
-
 const { post }: { post: CollectionEntry<'blog'> } = Astro.props;
 const { Content } = await render(post);
-
-const date = new Date(post.data.pubDate);
-const dateStr = date.toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-});
+const dateStr = post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 ---
-
-<Base title={`${post.data.title} - moonylt`} description={post.data.description}>
-  <article>
-    <div class="text-text-muted text-sm mb-2">~/blog/{post.id}.md</div>
-
-    <header class="mb-8">
-      <h1 class="text-accent text-3xl font-bold">{post.data.title}</h1>
-      <time class="text-text-muted text-sm mt-2">{dateStr}</time>
-    </header>
-
-    <div class="prose prose-invert max-w-none">
-      <Content />
-    </div>
+<Base title={`${post.data.title} — moonylt`} description={post.data.description}>
+  <article class="article-page">
+    <a href="/blog" class="back-link">← Back to journal</a>
+    <header class="page-heading"><p class="eyebrow">FIELD NOTES <span aria-hidden="true">/</span> <time datetime={post.data.pubDate.toISOString()}>{dateStr}</time></p><h1>{post.data.title}</h1>{post.data.description && <p>{post.data.description}</p>}</header>
+    <div class="prose prose-invert article-content"><Content /></div>
+    <a href="/blog" class="back-link article-back">← More from the journal</a>
   </article>
 </Base>

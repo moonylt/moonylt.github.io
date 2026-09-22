@@ -2,15 +2,9 @@
 import Base from '../../layouts/Base.astro';
 import BlogList from '../../components/BlogList.astro';
 import { getCollection } from 'astro:content';
-
 const posts = await getCollection('blog');
 ---
-
-<Base title="Blog - moonylt" description="My thoughts on software development and technology">
-  <section>
-    <div class="text-text-muted text-sm mb-2">~/blog</div>
-    <h1 class="text-accent text-3xl font-bold mb-8">Blog</h1>
-
-    <BlogList posts={posts} />
-  </section>
+<Base title="Journal — moonylt" description="Notes on development, technology, and learning along the way.">
+  <header class="page-heading"><p class="eyebrow">THE JOURNAL / FIELD NOTES</p><h1>Always learning.</h1><p>Thoughts, experiments, and notes from the workbench.</p></header>
+  <section class="journal-page" aria-label="Journal articles"><BlogList posts={posts} /></section>
 </Base>

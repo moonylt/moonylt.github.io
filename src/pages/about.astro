@@ -1,102 +1,33 @@
 ---
 import Base from '../layouts/Base.astro';
 ---
-
-<Base title="About - moonylt" description="About me and my background">
-  <section>
-    <div class="text-text-muted text-sm mb-2">~/about</div>
-    <h1 class="text-accent text-3xl font-bold mb-8">About</h1>
-
-    <div class="max-w-2xl space-y-6">
-      <!-- Introduction -->
-      <div class="project-card">
-        <h2 class="text-highlight text-lg font-bold mb-3">Who am I?</h2>
-        <p class="text-text-primary leading-relaxed">
-          I'm an embedded developer and hardware engineer passionate about building
-          hardware solutions for biomedical applications and other gadgets.
-          My focus is on creating reliable, efficient embedded systems and FPGA-based
-          designs that solve real-world problems.
-        </p>
-        <p class="text-text-muted text-sm mt-3">
-          Current interests: physiological signal acquisition, video processing systems,
-          and embedded firmware development.
-        </p>
-      </div>
-
-      <!-- Skills -->
-      <div class="project-card">
-        <h2 class="text-success text-lg font-bold mb-3">Skills & Technologies</h2>
-        <div class="flex flex-wrap gap-2">
-          <span class="tag tag-c">C</span>
-          <span class="tag tag-verilog">Verilog</span>
-          <span class="tag tag-embedded">Embedded</span>
-          <span class="tag tag-fpga">FPGA</span>
-          <span class="tag tag-typescript">Python</span>
-          <span class="tag tag-go">STM32</span>
-          <span class="tag tag-rust">ESP32</span>
-        </div>
-      </div>
-
-      <!-- Experience Areas -->
-      <div class="project-card">
-        <h2 class="text-accent text-lg font-bold mb-3">Experience Areas</h2>
-        <ul class="text-text-primary space-y-2">
-          <li class="flex items-start gap-2">
-            <span class="text-success">•</span>
-            <span>Physiological signal acquisition (ECG, SpO2, temperature)</span>
-          </li>
-          <li class="flex items-start gap-2">
-            <span class="text-success">•</span>
-            <span>FPGA video processing (HDMI, VGA, scaler, frame buffer)</span>
-          </li>
-          <li class="flex items-start gap-2">
-            <span class="text-success">•</span>
-            <span>Embedded firmware development</span>
-          </li>
-          <li class="flex items-start gap-2">
-            <span class="text-success">•</span>
-            <span>Hardware prototyping and PCB design</span>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Contact -->
-      <div class="project-card">
-        <h2 class="text-accent text-lg font-bold mb-3">Get in Touch</h2>
-        <div class="flex flex-col gap-3">
-          <a href="https://github.com/moonylt" target="_blank" rel="noopener" class="text-text-muted hover:text-accent transition-colors flex items-center gap-2">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.835 1.305 3.51.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-            GitHub: @moonylt
-          </a>
-          <button
-            id="email-btn-about"
-            class="text-text-muted hover:text-accent transition-colors flex items-center gap-2 cursor-pointer"
-            title="Click to copy email address"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-            Email: yueliteng@gmail.com
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
+<Base title="About — moonylt" description="Embedded developer and hardware engineer exploring biomedical signals, FPGA systems, and firmware.">
+  <header class="page-heading"><p class="eyebrow">BEHIND THE WORK / ABOUT</p><h1>A builder at heart.</h1><p>I'm moonylt, an embedded developer and hardware engineer working where the physical and digital worlds meet.</p></header>
+  <div class="about-layout">
+    <section class="about-story" aria-labelledby="approach-title">
+      <h2 id="approach-title">From a circuit to a working system.</h2>
+      <p>I'm passionate about building hardware solutions for biomedical applications and other gadgets. My focus is on creating reliable, efficient embedded systems and FPGA-based designs that solve real-world problems.</p>
+      <p>My current interests include physiological signal acquisition, video processing systems, and embedded firmware development.</p>
+      <a href="/projects" class="text-link">See what I'm building <span aria-hidden="true">↗</span></a>
+      <div class="about-contact" id="contact"><p class="eyebrow">GET IN TOUCH</p><h2>Start a conversation.</h2><a href="mailto:yueliteng@gmail.com" class="contact-email">yueliteng@gmail.com <span aria-hidden="true">↗</span></a><div class="contact-options"><a href="https://github.com/moonylt" target="_blank" rel="noopener noreferrer" class="text-link">Find me on GitHub ↗</a><button id="copy-email" type="button" class="text-link" hidden>Copy email</button></div><p id="copy-status" role="status" class="copy-status"></p></div>
+    </section>
+    <aside class="expertise-panel" aria-labelledby="expertise-title">
+      <p class="eyebrow">MY TOOLKIT</p><h2 id="expertise-title">Hardware × software</h2>
+      <div class="tags">{['C', 'Verilog', 'Embedded', 'FPGA', 'Python', 'STM32', 'ESP32'].map(skill => <span class="tag">{skill}</span>)}</div>
+      <ul class="expertise-list"><li><span>01</span><div><h3>Biomedical systems</h3><p>ECG, SpO2, temperature, and physiological signal acquisition.</p></div></li><li><span>02</span><div><h3>FPGA & video</h3><p>HDMI, VGA, scaling, and frame buffers.</p></div></li><li><span>03</span><div><h3>Embedded firmware</h3><p>Making hardware and software work together.</p></div></li><li><span>04</span><div><h3>Hardware design</h3><p>Prototyping, PCB design, and iteration.</p></div></li></ul>
+    </aside>
+  </div>
 </Base>
-
-<script define:vars={{ email: 'yueliteng@gmail.com' }}>
-  document.getElementById('email-btn-about')?.addEventListener('click', async (e) => {
-    e.preventDefault();
+<script>
+  const button = document.querySelector<HTMLButtonElement>('#copy-email');
+  const status = document.querySelector<HTMLElement>('#copy-status');
+  if (button && navigator.clipboard) button.hidden = false;
+  button?.addEventListener('click', async () => {
     try {
-      await navigator.clipboard.writeText(email);
-      const btn = document.getElementById('email-btn-about');
-      const originalHTML = btn.innerHTML;
-      btn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Copied!';
-      btn.classList.add('text-success');
-      setTimeout(() => {
-        btn.innerHTML = originalHTML;
-        btn.classList.remove('text-success');
-      }, 2000);
-    } catch (err) {
-      window.location.href = `mailto:${email}`;
+      await navigator.clipboard.writeText('yueliteng@gmail.com');
+      if (status) status.textContent = 'Email copied. Ready when you are.';
+    } catch {
+      if (status) status.textContent = 'Copy unavailable. You can select the email address above or open it in your mail app.';
     }
   });
 </script>

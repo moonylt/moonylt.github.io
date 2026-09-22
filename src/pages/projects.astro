@@ -1,17 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
-import FeaturedProject from '../components/FeaturedProject.astro';
-import ProjectList from '../components/ProjectList.astro';
-import { featuredProject, otherProjects } from '../data/projects';
+import ProjectCard from '../components/ProjectCard.astro';
+import { projects } from '../data/projects';
 ---
-
-<Base title="Projects - moonylt" description="My software projects and open source contributions">
-  <section>
-    <div class="text-text-muted text-sm mb-2">~/projects</div>
-    <h1 class="text-accent text-3xl font-bold mb-8">Projects</h1>
-
-    {featuredProject && <FeaturedProject project={featuredProject} />}
-
-    {otherProjects.length > 0 && <ProjectList projects={otherProjects} />}
-  </section>
+<Base title="Projects — moonylt" description="Embedded hardware, physiological signal acquisition, and FPGA video projects by moonylt.">
+  <header class="page-heading"><p class="eyebrow">THE WORKBENCH / PROJECTS</p><h1>Built from curiosity.</h1><p>A collection of hardware and embedded systems projects, from physiological signals to video processing.</p></header>
+  <section aria-label="Hardware projects" class="work-grid project-index">{projects.map((project, index) => <ProjectCard project={project} index={index} />)}</section>
 </Base>

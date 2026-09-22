@@ -1,109 +1,106 @@
 ---
-/**
- * Ctrl+K command palette (VS Code style quick nav).
- * Open: Ctrl+K or "/" (when not typing). Arrow keys + Enter, Esc closes.
- * Actions expose window.__geek from GeekEggs (matrix / CRT toggle).
- */
+import { projects } from '../data/projects';
+import { getCollection } from 'astro:content';
+const posts = await getCollection('blog');
+const pages = [
+  { label: 'Home', hint: 'Start here', href: '/' },
+  { label: 'Projects', hint: 'The workbench', href: '/projects' },
+  ...projects.map(project => ({ label: project.title, hint: project.tech.join(' / '), href: `/projects/${project.slug}` })),
+  { label: 'Journal', hint: 'Field notes', href: '/blog' },
+  ...posts.map(post => ({ label: post.data.title, hint: 'Journal article', href: `/blog/${post.id}` })),
+  { label: 'About', hint: 'Get in touch', href: '/about' },
+];
 ---
-<div id="palette" class="hidden fixed inset-0 z-[9997]">
-  <div class="absolute inset-0 bg-black/60" data-palette-close></div>
-  <div class="absolute left-1/2 -translate-x-1/2 top-[12vh] w-[92vw] max-w-xl rounded border border-border bg-bg-secondary shadow-2xl overflow-hidden">
-    <div class="flex items-center gap-2 px-3 py-2 border-b border-border">
-      <span class="text-accent font-mono text-sm">›</span>
-      <input
-        id="palette-in"
-        type="text"
-        autocomplete="off"
-        spellcheck="false"
-        placeholder="jump to… (projects, blog, matrix, crt)"
-        class="flex-1 bg-transparent outline-none text-text-primary font-mono text-sm caret-[#4dd0e1]"
-      />
-      <span class="text-text-muted text-[10px] font-mono border border-border rounded px-1">esc</span>
-    </div>
-    <ul id="palette-list" class="max-h-[50vh] overflow-y-auto py-1 font-mono text-sm"></ul>
-  </div>
-</div>
-
+<dialog id="palette" class="command-dialog" aria-labelledby="palette-title">
+  <div class="dialog-heading"><h2 id="palette-title">Find your way.</h2><button type="button" class="dialog-close" data-close-palette aria-label="Close search">Esc</button></div>
+  <label class="search-field"><span aria-hidden="true">⌕</span><span class="sr-only">Search pages and projects</span><input id="palette-in" type="search" autocomplete="off" spellcheck="false" placeholder="Search projects, articles, pages…" role="combobox" aria-expanded="true" aria-controls="palette-list" aria-autocomplete="list" /></label>
+  <ul id="palette-list" class="search-results" role="listbox" aria-label="Search results">
+    {pages.map((page, index) => <li role="presentation"><a id={`search-result-${index}`} class="search-result" href={page.href} role="option" tabindex="-1" aria-selected="false" data-search={`${page.label} ${page.hint}`.toLowerCase()}><span>{page.label}</span><small>{page.hint}</small></a></li>)}
+  </ul>
+  <p id="palette-empty" class="search-empty" hidden>No matches. Try “ECG”, “FPGA”, or “About”.</p>
+  <p class="sr-only" id="palette-status" role="status"></p>
+  <div class="search-footer"><span><kbd>↑</kbd> <kbd>↓</kbd> to navigate</span><span><kbd>Enter</kbd> to open</span><span><kbd>Esc</kbd> to close</span></div>
+</dialog>
 <script>
-  type Item = { label: string; hint: string; action: () => void };
-
-  const overlay = document.getElementById('palette') as HTMLDivElement;
-  const inputEl = document.getElementById('palette-in') as HTMLInputElement;
-  const listEl = document.getElementById('palette-list') as HTMLUListElement;
-
-  const go = (url: string) => { window.location.href = url; };
-
-  const items: Item[] = [
-    { label: '~ / home',            hint: 'mainpage',  action: () => go('/') },
-    { label: 'projects/',           hint: 'index',     action: () => go('/projects') },
-    { label: 'projects/ecg-physio', hint: 'flagship',  action: () => go('/projects/ecg-physio') },
-    { label: 'projects/video-convertor', hint: 'fpga', action: () => go('/projects/video-convertor') },
-    { label: 'blog/',               hint: 'writing',   action: () => go('/blog') },
-    { label: 'about',               hint: 'who am i',  action: () => go('/about') },
-    { label: 'github.com/moonylt',  hint: 'external',  action: () => window.open('https://github.com/moonylt', '_blank') },
-    {
-      label: 'matrix rain',
-      hint: 'easter egg',
-      action: () => window.dispatchEvent(new CustomEvent('geek:matrix')),
-    },
-    {
-      label: 'toggle CRT mode',
-      hint: 'easter egg',
-      action: () => (window as unknown as { __geek?: { toggleCrt: () => void } }).__geek?.toggleCrt(),
-    },
-  ];
-
-  let filtered: Item[] = items;
+  const dialog = document.querySelector<HTMLDialogElement>('#palette')!;
+  const input = document.querySelector<HTMLInputElement>('#palette-in')!;
+  const options = [...dialog.querySelectorAll<HTMLAnchorElement>('[data-search]')];
+  const empty = document.querySelector<HTMLElement>('#palette-empty')!;
+  const status = document.querySelector<HTMLElement>('#palette-status')!;
+  let filtered = options;
   let selected = 0;
+  let previousFocus: HTMLElement | null = null;
+  let previousOverflow = '';
+  const triggers = document.querySelectorAll<HTMLButtonElement>('[data-open-palette]');
 
-  function render() {
-    listEl.innerHTML = '';
-    filtered.forEach((it, i) => {
-      const li = document.createElement('li');
-      li.textContent = it.label;
-      li.className =
-        'flex justify-between px-3 py-2 cursor-pointer ' +
-        (i === selected ? 'bg-[#1e2a32] text-accent' : 'text-text-primary hover:bg-[#1e2a32]/60');
-      const hint = document.createElement('span');
-      hint.className = 'text-text-muted text-xs';
-      hint.textContent = it.hint;
-      li.appendChild(hint);
-      li.addEventListener('click', () => { close(); it.action(); });
-      listEl.appendChild(li);
-    });
+  function updateSelection() {
+    options.forEach(option => option.setAttribute('aria-selected', String(option === filtered[selected])));
+    const active = filtered[selected];
+    if (active) {
+      input.setAttribute('aria-activedescendant', active.id);
+      active.scrollIntoView({ block: 'nearest' });
+    } else input.removeAttribute('aria-activedescendant');
   }
-
-  function openPalette() {
-    overlay.classList.remove('hidden');
-    inputEl.value = '';
-    filtered = items; selected = 0; render();
-    setTimeout(() => inputEl.focus(), 0);
+  function filter() {
+    const query = input.value.trim().toLowerCase();
+    filtered = options.filter(option => option.dataset.search?.includes(query));
+    options.forEach(option => { option.parentElement!.hidden = !filtered.includes(option); });
+    selected = 0;
+    empty.hidden = filtered.length > 0;
+    status.textContent = `${filtered.length} results`;
+    updateSelection();
   }
-  function close() { overlay.classList.add('hidden'); }
-
-  window.addEventListener('keydown', (e) => {
-    const t = e.target as HTMLElement;
-    const typing = t.tagName === 'INPUT' || t.tagName === 'TEXTAREA';
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-      e.preventDefault();
-      overlay.classList.contains('hidden') ? openPalette() : close();
-    } else if (e.key === '/' && !typing && overlay.classList.contains('hidden')) {
-      e.preventDefault(); openPalette();
-    } else if (e.key === 'Escape' && !overlay.classList.contains('hidden')) {
-      close();
+  function open() {
+    if (dialog.open) return;
+    const mobileMenu = document.querySelector<HTMLDetailsElement>('#mobile-nav');
+    if (mobileMenu) mobileMenu.open = false;
+    previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    dialog.showModal();
+    input.value = '';
+    filter();
+    input.focus();
+  }
+  function close() { dialog.close(); }
+  triggers.forEach(trigger => {
+    trigger.hidden = false;
+    const shortcut = trigger.querySelector('kbd');
+    if (shortcut && !/Mac|iPhone|iPad/.test(navigator.platform)) shortcut.textContent = 'Ctrl K';
+    trigger.addEventListener('click', open);
+  });
+  dialog.querySelector('[data-close-palette]')?.addEventListener('click', close);
+  dialog.addEventListener('keydown', event => {
+    if (event.key === 'Escape') { event.preventDefault(); close(); }
+  });
+  dialog.addEventListener('close', () => {
+    document.body.style.overflow = previousOverflow;
+    previousFocus?.focus();
+  });
+  dialog.addEventListener('click', event => {
+    if (event.target !== dialog) return;
+    const box = dialog.getBoundingClientRect();
+    if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) close();
+  });
+  input.addEventListener('input', filter);
+  input.addEventListener('keydown', event => {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      if (filtered.length) selected = (selected + (event.key === 'ArrowDown' ? 1 : -1) + filtered.length) % filtered.length;
+      updateSelection();
+    } else if (event.key === 'Enter') {
+      event.preventDefault();
+      filtered[selected]?.click();
     }
   });
-
-  overlay.querySelector('[data-palette-close]')?.addEventListener('click', close);
-
-  inputEl?.addEventListener('input', () => {
-    const q = inputEl.value.toLowerCase().trim();
-    filtered = q ? items.filter((it) => (it.label + ' ' + it.hint).toLowerCase().includes(q)) : items;
-    selected = 0; render();
-  });
-  inputEl?.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowDown') { selected = Math.min(selected + 1, filtered.length - 1); render(); e.preventDefault(); }
-    else if (e.key === 'ArrowUp') { selected = Math.max(selected - 1, 0); render(); e.preventDefault(); }
-    else if (e.key === 'Enter' && filtered[selected]) { close(); filtered[selected].action(); }
+  document.addEventListener('keydown', event => {
+    const target = event.target;
+    const editing = target instanceof HTMLElement && (target.isContentEditable || !!target.closest('input, textarea, select, [role="textbox"]'));
+    const shortcut = (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k';
+    const slash = event.key === '/' && !editing && !event.ctrlKey && !event.metaKey && !event.altKey;
+    if (shortcut || (slash && !dialog.open)) {
+      event.preventDefault();
+      dialog.open ? close() : open();
+    }
   });
 </script>

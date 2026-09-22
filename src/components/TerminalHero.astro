@@ -1,83 +1,45 @@
 ---
-import TypingAnimation from './TypingAnimation.astro';
-import Particle from './Particle.astro';
+const skills = ['C', 'Verilog', 'STM32', 'FPGA'];
 ---
-
-<section class="relative min-h-[50vh] md:min-h-[60vh] flex flex-col items-start py-8 md:py-16">
-  <!-- Floating Particles - hidden on small screens -->
-  <div class="hidden sm:block absolute inset-0 pointer-events-none">
-    <Particle color="accent" size="md" position={{ top: '15%', right: '8%' }} delay={0} />
-    <Particle color="success" size="sm" position={{ top: '25%', right: '15%' }} delay={0.5} />
-    <Particle color="highlight" size="sm" position={{ top: '10%', right: '20%' }} delay={1} />
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> EMBEDDED SYSTEMS & HARDWARE</p>
+    <h1 id="hero-title">From signals<br />to <span>systems.</span></h1>
+    <p class="hero-intro">Hi, I'm <strong>moonylt</strong> — an embedded developer and hardware engineer turning ideas into things that work.</p>
+    <p class="hero-description">Exploring biomedical signals, FPGA video processing, and the space where hardware meets code.</p>
+    <div class="hero-actions">
+      <a href="#selected-work" class="button button-primary">Explore my work <span aria-hidden="true">↗</span></a>
+      <a href="/about" class="button button-quiet">A little about me <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="hero-skills" aria-label="Technologies">{skills.map(skill => <span>{skill}</span>)}</div>
   </div>
-
-  <!-- Terminal Content -->
-  <div class="font-mono w-full max-w-2xl relative z-10">
-    <!-- Directory indicator -->
-    <div class="text-text-muted text-xs md:text-sm mb-3 md:mb-4">
-      ~/mainpage <span class="text-success">(main)</span>
+  <div class="signal-panel" aria-hidden="true">
+    <div class="panel-topline"><span><i></i> THE ENGINEERING DESK</span><span>01 / SIGNAL</span></div>
+    <div class="signal-art">
+      <svg viewBox="0 0 480 360" fill="none">
+        <defs>
+          <pattern id="signal-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" stroke="#89bba2" stroke-opacity=".10"/></pattern>
+          <linearGradient id="trace" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#7adbb0" stop-opacity=".2"/><stop offset=".4" stop-color="#a2e6ba"/><stop offset="1" stop-color="#7adbb0" stop-opacity=".3"/></linearGradient>
+        </defs>
+        <rect width="480" height="360" fill="url(#signal-grid)"/>
+        <circle cx="240" cy="176" r="124" stroke="#7caa91" stroke-opacity=".13"/>
+        <circle cx="240" cy="176" r="96" stroke="#7caa91" stroke-opacity=".13" stroke-dasharray="3 7"/>
+        <path d="M0 104H64L87 127H148M480 248H412L389 225H331M0 272H103L148 227M480 80H379L332 127" stroke="#628873" stroke-opacity=".5"/>
+        <g stroke="#648774" stroke-width="2">
+          {[160,180,200].map(y => <><path d={`M148 ${y}h24M308 ${y}h24`}/></>)}
+          {[212,240,268].map(x => <><path d={`M${x} 108v24M${x} 228v24`}/></>)}
+        </g>
+        <rect x="172" y="132" width="136" height="96" rx="8" fill="#17291f" stroke="#6b997d"/>
+        <rect x="181" y="141" width="118" height="78" rx="4" fill="#1b2e23" stroke="#6b997d" stroke-opacity=".3"/>
+        <circle cx="192" cy="152" r="2" fill="#addac0"/>
+        <text x="240" y="174" text-anchor="middle" fill="#d8ecde" font-family="monospace" font-size="16" letter-spacing="4">BUILD</text>
+        <text x="240" y="198" text-anchor="middle" fill="#7ea98d" font-family="monospace" font-size="10" letter-spacing="2">TEST · ITERATE</text>
+        <path class="signal-trace" d="M0 284H66L76 276L86 284H110L123 298L137 250L151 309L163 284H214L229 275L244 284H272L284 299L297 249L310 309L324 284H374L388 276L400 284H480" stroke="url(#trace)" stroke-width="2"/>
+        <g fill="#9bd8af"><circle cx="64" cy="104" r="3"/><circle cx="412" cy="248" r="3"/><circle cx="103" cy="272" r="3"/><circle cx="379" cy="80" r="3"/></g>
+        <text x="25" y="41" fill="#799782" font-family="monospace" font-size="10" letter-spacing="1">IDEA → PROTOTYPE</text>
+        <text x="455" y="337" text-anchor="end" fill="#799782" font-family="monospace" font-size="10" letter-spacing="1">HARDWARE × SOFTWARE</text>
+      </svg>
     </div>
-
-    <!-- Command: who am i -->
-    <div class="terminal-command text-base md:text-lg mb-2">
-      $ <TypingAnimation text="who am i" delay={300} speed={80} />
-    </div>
-
-    <!-- Output - more prominent with line breaks -->
-    <div class="terminal-output mt-4 md:mt-6 space-y-2 md:space-y-3">
-      <div class="text-highlight text-2xl md:text-3xl font-bold">
-        <TypingAnimation text="moonylt" delay={800} speed={60} />
-      </div>
-      <div class="border-l-2 border-accent pl-4 mt-2">
-        <div class="text-text-primary text-base md:text-lg font-semibold">
-          <TypingAnimation text="Embedded Developer" delay={1400} speed={50} />
-        </div>
-        <div class="text-text-primary text-base md:text-lg font-semibold mt-1">
-          <TypingAnimation text="Hardware Engineer" delay={1800} speed={50} />
-        </div>
-      </div>
-      <div class="text-text-muted text-sm md:text-base mt-3 max-w-xl">
-        <TypingAnimation text="Building hardware solutions for biomedical and other gadgets." delay={2500} speed={30} />
-      </div>
-    </div>
-
-    <!-- Command: ls projects -->
-    <div class="terminal-command text-base md:text-lg mt-8 md:mt-10">
-      $ <TypingAnimation text="ls projects/" delay={3500} speed={80} />
-    </div>
-
-    <!-- Clickable project links - visible immediately, styled as terminal -->
-    <div class="flex flex-wrap gap-3 md:gap-4 mt-3 md:mt-4 text-sm md:text-base">
-      <a href="/projects/ecg-physio" class="text-accent hover:text-success hover:underline transition-colors cursor-pointer">
-        ECG-physio/
-      </a>
-      <a href="/projects/video-convertor" class="text-accent hover:text-success hover:underline transition-colors cursor-pointer">
-        Video_Covertor/
-      </a>
-      <a href="/blog" class="text-accent hover:text-success hover:underline transition-colors cursor-pointer">
-        blog/
-      </a>
-    </div>
-
-    <!-- Blinking cursor -->
-    <div class="terminal-cursor mt-4 md:mt-6 text-accent">█</div>
-  </div>
-
-  <!-- Skill tags -->
-  <div class="flex flex-wrap gap-2 mt-8 md:mt-12 relative z-10">
-    <span class="tag tag-c">C</span>
-    <span class="tag tag-verilog">Verilog</span>
-    <span class="tag tag-embedded">Embedded</span>
-    <span class="tag tag-fpga">FPGA</span>
-  </div>
-
-  <!-- CTA -->
-  <div class="mt-6 md:mt-8 flex flex-col sm:flex-row gap-3 md:gap-4 relative z-10">
-    <a href="/projects" class="bg-accent/20 border border-accent/40 text-accent px-4 py-2 rounded hover:bg-accent/30 transition-colors text-center cursor-pointer">
-      View Projects →
-    </a>
-    <a href="/about" class="text-text-muted hover:text-text-primary transition-colors text-center cursor-pointer">
-      About Me →
-    </a>
+    <div class="panel-bottomline"><span>Curiosity, connected.</span><span class="panel-cross">+</span></div>
   </div>
 </section>
