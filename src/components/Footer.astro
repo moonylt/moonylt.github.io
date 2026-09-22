@@ -1,44 +1,10 @@
 ---
 const currentYear = new Date().getFullYear();
-const email = 'yueliteng@gmail.com';
 ---
-
-<footer class="border-t border-border py-6 mt-auto">
-  <div class="max-w-6xl mx-auto px-4 md:px-8 lg:px-16 flex flex-col md:flex-row justify-between items-center gap-4">
-    <div class="text-text-muted text-sm">
-      © {currentYear} moonylt. Built with Astro.
-      <div id="footer-status" class="text-xs mt-1 text-success/70 font-mono">[--:--:--] uptime 00:00:00 · all systems nominal</div>
-    </div>
-    <div class="flex gap-4">
-      <a href="https://github.com/moonylt" target="_blank" rel="noopener" class="text-text-muted hover:text-accent transition-colors">
-        GitHub
-      </a>
-      <button
-        id="email-btn"
-        class="text-text-muted hover:text-accent transition-colors cursor-pointer"
-        title="Click to copy email address"
-      >
-        Email
-      </button>
-    </div>
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div><a href="/" class="footer-name">moonylt<span>.</span></a><p>Hardware meets curiosity.</p></div>
+    <p class="footer-copyright">© {currentYear} moonylt <span>Built with Astro</span></p>
+    <div class="footer-links"><button type="button" class="motion-toggle" data-motion-toggle hidden>Pause motion</button><a href="https://github.com/moonylt" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a><a href="mailto:yueliteng@gmail.com">Email <span aria-hidden="true">↗</span></a><a href="#main-content" aria-label="Back to top">↑</a></div>
   </div>
-  <script define:vars={{ email }}>
-    document.getElementById('email-btn')?.addEventListener('click', async (e) => {
-      e.preventDefault();
-      try {
-        await navigator.clipboard.writeText(email);
-        const btn = document.getElementById('email-btn');
-        const originalText = btn.textContent;
-        btn.textContent = 'Copied!';
-        btn.classList.add('text-success');
-        setTimeout(() => {
-          btn.textContent = originalText;
-          btn.classList.remove('text-success');
-        }, 2000);
-      } catch (err) {
-        // Fallback: open mailto
-        window.location.href = `mailto:${email}`;
-      }
-    });
-  </script>
 </footer>

@@ -1,83 +1,18 @@
 ---
-import TypingAnimation from './TypingAnimation.astro';
-import Particle from './Particle.astro';
+const skills = ['C', 'Verilog', 'STM32', 'FPGA'];
 ---
-
-<section class="relative min-h-[50vh] md:min-h-[60vh] flex flex-col items-start py-8 md:py-16">
-  <!-- Floating Particles - hidden on small screens -->
-  <div class="hidden sm:block absolute inset-0 pointer-events-none">
-    <Particle color="accent" size="md" position={{ top: '15%', right: '8%' }} delay={0} />
-    <Particle color="success" size="sm" position={{ top: '25%', right: '15%' }} delay={0.5} />
-    <Particle color="highlight" size="sm" position={{ top: '10%', right: '20%' }} delay={1} />
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> EMBEDDED SYSTEMS & HARDWARE</p>
+    <h1 id="hero-title">From signals<br />to <span>systems.</span></h1>
   </div>
-
-  <!-- Terminal Content -->
-  <div class="font-mono w-full max-w-2xl relative z-10">
-    <!-- Directory indicator -->
-    <div class="text-text-muted text-xs md:text-sm mb-3 md:mb-4">
-      ~/mainpage <span class="text-success">(main)</span>
+  <div class="hero-summary">
+    <p class="hero-intro">Hi, I'm <strong>moonylt</strong> — an embedded developer and hardware engineer turning ideas into things that work.</p>
+    <p class="hero-description">Exploring biomedical signals, FPGA video processing, and the space where hardware meets code.</p>
+    <div class="hero-actions">
+      <a href="#selected-work" class="button button-primary">Explore my work <span aria-hidden="true">↗</span></a>
+      <a href="/about" class="button button-quiet">A little about me <span aria-hidden="true">→</span></a>
     </div>
-
-    <!-- Command: who am i -->
-    <div class="terminal-command text-base md:text-lg mb-2">
-      $ <TypingAnimation text="who am i" delay={300} speed={80} />
-    </div>
-
-    <!-- Output - more prominent with line breaks -->
-    <div class="terminal-output mt-4 md:mt-6 space-y-2 md:space-y-3">
-      <div class="text-highlight text-2xl md:text-3xl font-bold">
-        <TypingAnimation text="moonylt" delay={800} speed={60} />
-      </div>
-      <div class="border-l-2 border-accent pl-4 mt-2">
-        <div class="text-text-primary text-base md:text-lg font-semibold">
-          <TypingAnimation text="Embedded Developer" delay={1400} speed={50} />
-        </div>
-        <div class="text-text-primary text-base md:text-lg font-semibold mt-1">
-          <TypingAnimation text="Hardware Engineer" delay={1800} speed={50} />
-        </div>
-      </div>
-      <div class="text-text-muted text-sm md:text-base mt-3 max-w-xl">
-        <TypingAnimation text="Building hardware solutions for biomedical and other gadgets." delay={2500} speed={30} />
-      </div>
-    </div>
-
-    <!-- Command: ls projects -->
-    <div class="terminal-command text-base md:text-lg mt-8 md:mt-10">
-      $ <TypingAnimation text="ls projects/" delay={3500} speed={80} />
-    </div>
-
-    <!-- Clickable project links - visible immediately, styled as terminal -->
-    <div class="flex flex-wrap gap-3 md:gap-4 mt-3 md:mt-4 text-sm md:text-base">
-      <a href="/projects/ecg-physio" class="text-accent hover:text-success hover:underline transition-colors cursor-pointer">
-        ECG-physio/
-      </a>
-      <a href="/projects/video-convertor" class="text-accent hover:text-success hover:underline transition-colors cursor-pointer">
-        Video_Covertor/
-      </a>
-      <a href="/blog" class="text-accent hover:text-success hover:underline transition-colors cursor-pointer">
-        blog/
-      </a>
-    </div>
-
-    <!-- Blinking cursor -->
-    <div class="terminal-cursor mt-4 md:mt-6 text-accent">█</div>
-  </div>
-
-  <!-- Skill tags -->
-  <div class="flex flex-wrap gap-2 mt-8 md:mt-12 relative z-10">
-    <span class="tag tag-c">C</span>
-    <span class="tag tag-verilog">Verilog</span>
-    <span class="tag tag-embedded">Embedded</span>
-    <span class="tag tag-fpga">FPGA</span>
-  </div>
-
-  <!-- CTA -->
-  <div class="mt-6 md:mt-8 flex flex-col sm:flex-row gap-3 md:gap-4 relative z-10">
-    <a href="/projects" class="bg-accent/20 border border-accent/40 text-accent px-4 py-2 rounded hover:bg-accent/30 transition-colors text-center cursor-pointer">
-      View Projects →
-    </a>
-    <a href="/about" class="text-text-muted hover:text-text-primary transition-colors text-center cursor-pointer">
-      About Me →
-    </a>
+    <div class="hero-skills" aria-label="Technologies">{skills.map(skill => <span>{skill}</span>)}</div>
   </div>
 </section>

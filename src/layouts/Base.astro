@@ -3,16 +3,13 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import GeekEggs from '../components/GeekEggs.astro';
 import CommandPalette from '../components/CommandPalette.astro';
+import BinaryBackground from '../components/BinaryBackground.astro';
 import '../styles/global.css';
 
-interface Props {
-  title: string;
-  description?: string;
-}
-
-const { title, description = 'Personal website and blog' } = Astro.props;
+interface Props { title: string; description?: string; }
+const { title, description = 'Embedded systems, hardware projects, and engineering notes by moonylt.' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -20,20 +17,23 @@ const { title, description = 'Personal website and blog' } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <meta name="author" content="moonylt" />
+    <meta name="theme-color" content="#29323f" />
+    <link rel="canonical" href={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
   </head>
-  <body class="min-h-screen flex flex-col">
+  <body>
+    <BinaryBackground />
+    <a href="#main-content" class="skip-link">Skip to content</a>
     <Nav />
-    <main class="flex-grow px-4 md:px-8 lg:px-16 py-8 max-w-6xl mx-auto w-full">
-      <slot />
-    </main>
+    <main id="main-content" class="site-main container" tabindex="-1"><slot /></main>
     <Footer />
     <GeekEggs />
     <CommandPalette />

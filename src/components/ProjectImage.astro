@@ -1,0 +1,17 @@
+---
+import { Image } from 'astro:assets';
+import ecg from '../../public/images/projects/ecg-physio.jpg';
+import output from '../../public/images/projects/ecg-physio-out.jpg';
+import video from '../../public/images/projects/video-convertor.jpg';
+import type { ImageMetadata } from 'astro';
+interface Props { src: string; alt: string; detail?: boolean; }
+const { src, alt, detail = false } = Astro.props;
+const images: Record<string, ImageMetadata> = {
+  '/images/projects/ecg-physio.jpg': ecg,
+  '/images/projects/ecg-physio-out.jpg': output,
+  '/images/projects/video-convertor.jpg': video,
+};
+const image = images[src];
+const widths = image ? [...new Set([480, 800, 1200].map(width => Math.min(width, image.width)))] : [];
+---
+{image ? <Image src={image} alt={alt} widths={widths} sizes={detail ? '(max-width: 767px) 90vw, 700px' : '(max-width: 767px) 90vw, 540px'} format="webp" quality={82} loading="lazy" decoding="async" /> : <img src={src} alt={alt} loading="lazy" decoding="async" />}

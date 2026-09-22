@@ -1,36 +1,24 @@
 ---
 import MobileMenu from './MobileMenu.astro';
-
-const currentPath = Astro.url.pathname;
-
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 const navItems = [
-  { name: 'home', path: '/' },
-  { name: 'projects', path: '/projects' },
-  { name: 'blog', path: '/blog' },
-  { name: 'about', path: '/about' },
+  { name: 'Home', path: '/' }, { name: 'Projects', path: '/projects' },
+  { name: 'Journal', path: '/blog' }, { name: 'About', path: '/about' },
 ];
+const active = (path: string) => path === '/' ? currentPath === '/' : currentPath.startsWith(path);
 ---
-
-<nav class="sticky top-0 z-50 bg-bg-primary/90 backdrop-blur-sm border-b border-border">
-  <div class="max-w-6xl mx-auto px-4 md:px-8 lg:px-16 py-4 flex justify-between items-center">
-    <!-- Logo -->
-    <a href="/" class="text-accent hover:opacity-80 transition-opacity">
-      ~/mainpage
-    </a>
-
-    <!-- Desktop Nav -->
-    <div class="hidden md:flex gap-6">
-      {navItems.map((item) => (
-        <a
-          href={item.path}
-          class={`nav-link ${currentPath === item.path ? 'nav-link-active' : ''}`}
-        >
-          {item.name}
-        </a>
-      ))}
+<header class="site-header">
+  <nav class="container nav-inner" aria-label="Main navigation">
+    <a href="/" class="wordmark" aria-label="moonylt home"><span class="brand-symbol" aria-hidden="true">m<span>.</span></span><span>moonylt<span class="wordmark-dot">/</span></span></a>
+    <div class="desktop-nav">
+      {navItems.map(item => <a href={item.path} class:list={['nav-link', { 'nav-link-active': active(item.path) }]} aria-current={active(item.path) ? 'page' : undefined}>{item.name}</a>)}
     </div>
-
-    <!-- Mobile Menu Button -->
-    <MobileMenu navItems={navItems} currentPath={currentPath} />
-  </div>
-</nav>
+    <div class="nav-actions">
+      <button type="button" class="search-trigger" data-open-palette aria-label="Search pages" aria-haspopup="dialog" aria-controls="palette" hidden>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>
+        <span>Search</span><kbd>⌘ K</kbd>
+      </button>
+      <MobileMenu navItems={navItems} currentPath={currentPath} />
+    </div>
+  </nav>
+</header>

@@ -1,0 +1,20 @@
+---
+import ProjectImage from './ProjectImage.astro';
+import type { Project } from '../data/projects';
+interface Props { project: Project; index?: number; }
+const { project, index = 0 } = Astro.props;
+---
+<article class="work-card">
+  <a href={`/projects/${project.slug}`} class="work-card-link">
+    <div class="work-image">
+      {project.image && <ProjectImage src={project.image} alt={`${project.title} prototype circuit board`} />}
+      <span class="work-category">{project.slug === 'ecg-physio' ? 'BIOMEDICAL / EMBEDDED' : 'VIDEO / FPGA'}</span>
+      <span class="work-image-arrow" aria-hidden="true">↗</span>
+    </div>
+    <div class="work-card-body">
+      <div class="work-card-title"><h3>{project.title}</h3><span class="mono">0{index + 1}</span></div>
+      <p>{project.description}</p>
+      <div class="work-card-bottom"><div class="tags">{project.tech.map(tech => <span class="tag">{tech}</span>)}</div><span class="text-link">View project <span aria-hidden="true">→</span></span></div>
+    </div>
+  </a>
+</article>

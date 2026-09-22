@@ -1,9 +1,24 @@
 ---
 import Base from '../layouts/Base.astro';
 import TerminalHero from '../components/TerminalHero.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import BlogList from '../components/BlogList.astro';
+import { projects } from '../data/projects';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('blog')).sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()).slice(0, 2);
 ---
-
-<Base title="moonylt - Mainpage" description="Embedded Developer | Hardware Engineer personal website and blog">
+<Base title="moonylt — Embedded Developer & Hardware Engineer">
   <TerminalHero />
-
+  <section id="selected-work" class="section-block" aria-labelledby="work-heading">
+    <div class="section-heading"><div><p class="eyebrow">01 / SELECTED WORK</p><h2 id="work-heading">Ideas, made tangible.</h2></div><a href="/projects" class="text-link">All projects <span aria-hidden="true">↗</span></a></div>
+    <div class="work-grid">{projects.map((project, index) => <ProjectCard project={project} index={index} />)}</div>
+  </section>
+  <section class="section-block journal-section" aria-labelledby="journal-heading">
+    <div class="journal-intro"><p class="eyebrow">02 / FIELD NOTES</p><h2 id="journal-heading">Along the way.</h2><p>Notes on building, learning, and figuring things out.</p><a href="/blog" class="text-link">Read the journal <span aria-hidden="true">↗</span></a></div>
+    <BlogList posts={posts} />
+  </section>
+  <section class="contact-strip" aria-labelledby="contact-heading">
+    <div><p class="eyebrow">LET'S CONNECT</p><h2 id="contact-heading">Have something in mind?</h2><p>Always happy to talk hardware, code, and interesting ideas.</p></div>
+    <a href="mailto:yueliteng@gmail.com" class="button button-primary">Say hello <span aria-hidden="true">↗</span></a>
+  </section>
 </Base>

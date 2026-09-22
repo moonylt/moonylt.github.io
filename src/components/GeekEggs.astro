@@ -1,144 +1,20 @@
 ---
-/**
- * Site-wide geek easter eggs (invisible unless you go looking):
- *  - console signature for dev-tools peekers
- *  - Konami code (↑↑↓↓←→←→BA) toggles CRT mode + matrix rain burst
- *  - window event "geek:matrix" also triggers the rain (terminal `matrix` cmd)
- *  - tab title plays hide-and-seek when you leave
- */
+/* A quiet, opt-in nod to the original terminal theme. */
 ---
-
-<!-- CRT overlay (hidden unless .crt on <html>) -->
-<div id="crt-overlay" class="pointer-events-none fixed inset-0 z-[9999] opacity-0 transition-opacity duration-500"></div>
-<canvas id="matrix-rain" class="pointer-events-none fixed inset-0 z-[9998] opacity-0 transition-opacity duration-500"></canvas>
-
+<div id="crt-overlay" aria-hidden="true"></div>
 <style is:global>
-  html.crt #crt-overlay {
-    opacity: 1;
-    background:
-      repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0px, rgba(0, 0, 0, 0.18) 1px, transparent 1px, transparent 3px);
-    mix-blend-mode: multiply;
-  }
-  html.crt body { text-shadow: 0 0 2px rgba(77, 208, 225, 0.35); }
+  #crt-overlay { display: none; pointer-events: none; position: fixed; inset: 0; z-index: 50; }
+  html.crt #crt-overlay { display: block; background: repeating-linear-gradient(0deg, #00000018 0px, #00000018 1px, transparent 1px, transparent 4px); }
+  @media (prefers-reduced-motion: reduce) { #crt-overlay { display: none !important; } }
 </style>
-
 <script>
-  // ---------- console signature ----------
-  console.log(
-    '%C\n' +
-    '  ███╗   ███╗ ██████╗  ██████╗ ███╗   ██╗██╗   ██╗██╗     ████████╗\n' +
-    '  ████╗ ████║██╔═══██╗██╔═══██╗████╗  ██║╚██╗ ██╔╝██║     ╚══██╔══╝\n' +
-    '  ██╔████╔██║██║   ██║██║   ██║██╔██╗ ██║ ╚████╔╝ ██║        ██║\n' +
-    '  ██║╚██╔╝██║██║   ██║██║   ██║██║╚██╗██║  ╚██╔╝  ██║        ██║\n' +
-    '  ██║ ╚═╝ ██║╚██████╔╝╚██████╔╝██║ ╚████║   ██║   ████████╗  ██║\n' +
-    '  ╚═╝     ╚═╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚═══════╝  ╚═╝\n',
-    'color: #4dd0e1; font-weight: bold;'
-  );
-  console.log(
-    '%c curious enough to open the console? try the Konami code on the page: ↑↑↓↓←→←→BA ',
-    'color: #ffb74d; background: #1a1a2e;'
-  );
-
-  // ---------- matrix rain ----------
-  let raining = false;
-  function matrixRain(seconds: number) {
-    if (raining) return;
-    raining = true;
-    const canvas = document.getElementById('matrix-rain') as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d');
-    if (!canvas || !ctx) return;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    canvas.style.opacity = '0.25';
-    const chars = '01アイウエオカキクケコ<>/{}[]$#@!&*';
-    const fontSize = 14;
-    let cols = Math.floor(canvas.width / fontSize);
-    let drops = new Array(cols).fill(1).map(() => Math.random() * -50);
-    const draw = () => {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#4dd0e1';
-      ctx.font = fontSize + 'px monospace';
-      for (let i = 0; i < drops.length; i++) {
-        ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * fontSize, drops[i] * fontSize);
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-        drops[i]++;
-      }
-    };
-    const timer = setInterval(draw, 50);
-    setTimeout(() => {
-      clearInterval(timer);
-      canvas.style.opacity = '0';
-      raining = false;
-    }, seconds * 1000);
-  }
-  window.addEventListener('geek:matrix', () => matrixRain(6));
-
-  // ---------- Konami code → CRT mode ----------
-  const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-  let kIdx = 0;
-  window.addEventListener('keydown', (e) => {
-    const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
-    kIdx = key === KONAMI[kIdx] ? kIdx + 1 : (key === KONAMI[0] ? 1 : 0);
-    if (kIdx === KONAMI.length) {
-      kIdx = 0;
-      const crt = document.documentElement.classList.toggle('crt');
-      if (crt) matrixRain(6);
-      console.log('%c KONAMI ' + (crt ? 'ON — welcome to the machine.' : 'OFF'), 'color:#ff5f57');
-    }
+  const sequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+  let position = 0;
+  window.addEventListener('keydown', event => {
+    const target = event.target;
+    if (target instanceof HTMLElement && (target.isContentEditable || target.closest('input, textarea, select, dialog[open]'))) return;
+    const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+    position = key === sequence[position] ? position + 1 : Number(key === sequence[0]);
+    if (position === sequence.length) { position = 0; document.documentElement.classList.toggle('crt'); }
   });
-
-  // ---------- tab title hide & seek ----------
-  const baseTitle = document.title;
-  let gone = false;
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      gone = true;
-      document.title = gone ? '(╯°□°)╯ come back!' : baseTitle;
-    } else {
-      setTimeout(() => { document.title = baseTitle; }, 600);
-    }
-  });
-
-  // ---------- footer live status line ----------
-  const boot = Date.now();
-  const el = document.getElementById('footer-status');
-  let ghStat = '';
-  const cached = localStorage.getItem('geek-gh');
-  if (cached) {
-    try {
-      const c = JSON.parse(cached);
-      if (Date.now() - c.t < 3600e3) ghStat = ` · gh: ${c.repos} repos ★${c.stars}`;
-    } catch { /* ignore */ }
-  }
-  if (!ghStat) {
-    fetch('https://api.github.com/users/moonylt/repos?per_page=100')
-      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
-      .then((repos: { stargazers_count: number }[]) => {
-        const stars = repos.reduce((a, r) => a + (r.stargazers_count || 0), 0);
-        ghStat = ` · gh: ${repos.length} repos ★${stars}`;
-        localStorage.setItem('geek-gh', JSON.stringify({ t: Date.now(), repos: repos.length, stars }));
-      })
-      .catch(() => {});
-  }
-  if (el) {
-    setInterval(() => {
-      const up = Math.floor((Date.now() - boot) / 1000);
-      const hh = String(Math.floor(up / 3600)).padStart(2, '0');
-      const mm = String(Math.floor((up % 3600) / 60)).padStart(2, '0');
-      const ss = String(up % 60).padStart(2, '0');
-      const now = new Date().toTimeString().slice(0, 8);
-      el.textContent = `[${now}] uptime ${hh}:${mm}:${ss} · all systems nominal${ghStat}`;
-    }, 1000);
-  }
-
-  // ---------- public API (palette / terminal reuse) ----------
-  (window as unknown as { __geek: object }).__geek = {
-    matrixRain,
-    toggleCrt: () => {
-      const crt = document.documentElement.classList.toggle('crt');
-      if (crt) matrixRain(4);
-      return crt;
-    },
-  };
 </script>
