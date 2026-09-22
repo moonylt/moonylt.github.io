@@ -1,0 +1,150 @@
+<canvas class="binary-background" id="binary-background" aria-hidden="true"></canvas>
+
+<style is:global>
+  body { isolation: isolate; }
+  .binary-background { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+  .motion-toggle { background: none; border: 0; color: var(--muted); font-size: 11px; padding: 10px 0; }
+  .motion-toggle:hover { color: var(--accent); }
+  .binary-background[data-motion="reduced"] { display: none; }
+</style>
+
+<script>
+  const canvas = document.querySelector<HTMLCanvasElement>('#binary-background');
+  const context = canvas?.getContext('2d');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-motion-toggle]');
+
+  if (canvas && context && toggle) {
+    const surface = canvas;
+    const ctx = context;
+    const button = toggle;
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
+    type Stream = { x: number; head: number; speed: number; bits: string[]; opacity: number };
+    let streams: Stream[] = [];
+    let width = 0;
+    let height = 0;
+    let frame = 0;
+    let previousTime = 0;
+    let pageActive = true;
+    let paused = false;
+    let preference: 'on' | 'off' | null = null;
+    let compact = false;
+    const pointer = { x: -1000, y: -1000, targetX: -1000, targetY: -1000, active: false, strength: 0 };
+    try {
+      const stored = localStorage.getItem('portfolio-motion');
+      if (stored === 'on' || stored === 'off') preference = stored;
+    } catch { /* Storage is optional. */ }
+    const reduce = () => reducedMotion.matches && preference !== 'on';
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      compact = width < 768;
+      const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
+      surface.width = Math.round(width * ratio);
+      surface.height = Math.round(height * ratio);
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      const spacing = compact ? 54 : 38;
+      streams = Array.from({ length: Math.ceil(width / spacing) }, (_, index) => ({
+        x: index * spacing + spacing / 2,
+        head: Math.random() * (height + 240),
+        speed: (compact ? 12 : 17) + Math.random() * 15,
+        bits: Array.from({ length: compact ? 7 : 11 }, () => Math.random() > .5 ? '1' : '0'),
+        opacity: .055 + Math.random() * (compact ? .035 : .07),
+      }));
+      pointer.active = false;
+      pointer.strength = 0;
+      draw();
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+      if (reduce()) return;
+      ctx.font = `${compact ? 10 : 12}px Consolas, monospace`;
+      ctx.textAlign = 'center';
+      if (pointer.strength > .01) {
+        const halo = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 180);
+        halo.addColorStop(0, `rgba(126, 210, 153, ${.045 * pointer.strength})`);
+        halo.addColorStop(1, 'rgba(126, 210, 153, 0)');
+        ctx.fillStyle = halo;
+        ctx.fillRect(0, 0, width, height);
+      }
+      for (const stream of streams) {
+        for (let index = 0; index < stream.bits.length; index++) {
+          const y = stream.head - index * 22;
+          if (y < -20 || y > height + 20) continue;
+          const dx = stream.x - pointer.x;
+          const dy = y - pointer.y;
+          const distance = Math.hypot(dx, dy);
+          const influence = Math.max(0, 1 - distance / 170) ** 2 * pointer.strength;
+          const displacement = influence * 22;
+          const fade = 1 - index / stream.bits.length;
+          const alpha = stream.opacity * fade + influence * .35;
+          ctx.fillStyle = `rgba(166, 224, 179, ${alpha})`;
+          ctx.fillText(stream.bits[index], stream.x + dx / (distance || 1) * displacement, y + dy / (distance || 1) * displacement);
+        }
+      }
+    }
+
+    function animate(time: number) {
+      frame = 0;
+      if (paused || reduce() || document.hidden || !pageActive) return;
+      // Cap drawing at 30 fps and avoid catch-up jumps after inactive tabs.
+      if (!previousTime || time - previousTime >= 1000 / 30) {
+        const delta = previousTime ? Math.min((time - previousTime) / 1000, .08) : 0;
+        previousTime = time;
+        const easing = 1 - Math.exp(-8 * delta);
+        pointer.x += (pointer.targetX - pointer.x) * easing;
+        pointer.y += (pointer.targetY - pointer.y) * easing;
+        pointer.strength += ((pointer.active ? 1 : 0) - pointer.strength) * easing;
+        for (const stream of streams) {
+          stream.head += stream.speed * delta;
+          if (stream.head - stream.bits.length * 22 > height) {
+            stream.head = -22;
+            stream.bits = stream.bits.map(() => Math.random() > .5 ? '1' : '0');
+          }
+        }
+        draw();
+      }
+      frame = requestAnimationFrame(animate);
+    }
+
+    function sync() {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      previousTime = 0;
+      paused = preference === 'off' || reduce();
+      button.hidden = false;
+      button.textContent = paused ? (reduce() ? 'Enable motion' : 'Resume motion') : 'Pause motion';
+      surface.dataset.motion = reduce() ? 'reduced' : paused ? 'paused' : document.hidden || !pageActive ? 'inactive' : 'running';
+      pointer.active = false;
+      pointer.strength = 0;
+      draw();
+      if (!paused && !reduce() && !document.hidden && pageActive) frame = requestAnimationFrame(animate);
+    }
+
+    button.addEventListener('click', () => {
+      preference = paused ? 'on' : 'off';
+      try { localStorage.setItem('portfolio-motion', preference); } catch { /* Keep the in-memory preference. */ }
+      sync();
+    });
+    window.addEventListener('pointermove', event => {
+      if (paused || reduce() || !finePointer.matches || event.pointerType === 'touch') return;
+      if (event.target instanceof Element && event.target.closest('dialog[open]')) { pointer.active = false; return; }
+      if (!pointer.active && pointer.strength < .01) { pointer.x = event.clientX; pointer.y = event.clientY; }
+      pointer.targetX = event.clientX;
+      pointer.targetY = event.clientY;
+      pointer.active = true;
+    }, { passive: true });
+    document.addEventListener('pointerleave', () => { pointer.active = false; });
+    window.addEventListener('blur', () => { pointer.active = false; });
+    window.addEventListener('resize', resize, { passive: true });
+    document.addEventListener('visibilitychange', sync);
+    reducedMotion.addEventListener('change', sync);
+    finePointer.addEventListener('change', () => { pointer.active = false; });
+    window.addEventListener('pagehide', () => { pageActive = false; sync(); });
+    window.addEventListener('pageshow', () => { pageActive = true; sync(); });
+    resize();
+    sync();
+  }
+</script>

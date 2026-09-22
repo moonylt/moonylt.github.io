@@ -3,6 +3,7 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import GeekEggs from '../components/GeekEggs.astro';
 import CommandPalette from '../components/CommandPalette.astro';
+import BinaryBackground from '../components/BinaryBackground.astro';
 import '../styles/global.css';
 
 interface Props { title: string; description?: string; }
@@ -29,6 +30,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <title>{title}</title>
   </head>
   <body>
+    <BinaryBackground />
     <a href="#main-content" class="skip-link">Skip to content</a>
     <Nav />
     <main id="main-content" class="site-main container" tabindex="-1"><slot /></main>

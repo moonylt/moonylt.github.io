@@ -42,6 +42,7 @@ When adding a project photo, register its static import in `ProjectImage.astro` 
 - Check the mobile menu at 320px, 390px, and tablet widths; Escape and outside clicks close it.
 - Verify long project diagrams scroll inside their own region without widening the page.
 - Main content, navigation, project links, and email links work without JavaScript.
-- Reduced-motion preferences disable smooth scrolling and transitions.
+- Reduced-motion preferences disable automatic background motion, smooth scrolling, and transitions. The footer offers an explicit Enable motion override. Pause/resume choices persist locally.
+- The binary background uses a capped 30 fps canvas, reduces density on small screens, responds to fine pointers, and stops in hidden tabs.
 
 The original Konami-code CRT overlay remains as an opt-in easter egg. No recurring status timers, remote statistics requests, external fonts, or animation delays are required to view the content.
