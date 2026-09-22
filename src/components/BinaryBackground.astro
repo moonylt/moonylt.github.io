@@ -44,12 +44,12 @@
       surface.width = Math.round(width * ratio);
       surface.height = Math.round(height * ratio);
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-      const spacing = compact ? 54 : 38;
+      const spacing = compact ? 36 : 26;
       streams = Array.from({ length: Math.ceil(width / spacing) }, (_, index) => ({
         x: index * spacing + spacing / 2,
         head: Math.random() * (height + 240),
         speed: (compact ? 12 : 17) + Math.random() * 15,
-        bits: Array.from({ length: compact ? 7 : 11 }, () => Math.random() > .5 ? '1' : '0'),
+        bits: Array.from({ length: compact ? 11 : 16 }, () => Math.random() > .5 ? '1' : '0'),
         opacity: .055 + Math.random() * (compact ? .035 : .07),
       }));
       pointer.active = false;
